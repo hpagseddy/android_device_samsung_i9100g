@@ -101,7 +101,7 @@ BOARD_USES_SECURE_SERVICES := true
 
 # Selinux
 BOARD_SEPOLICY_DIRS += \
-    device/samsung/i9100g/selinux
+    device/samsung/i9100g/sepolicy
 
 BOARD_SEPOLICY_UNION += \
     file_contexts \
