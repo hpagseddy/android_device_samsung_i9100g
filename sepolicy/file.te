@@ -1,0 +1,2 @@
+# Filesystem types
+type compass_calibration_file, file_type, data_file_type;
