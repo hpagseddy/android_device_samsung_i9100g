@@ -104,13 +104,12 @@ BOARD_SEPOLICY_DIRS += \
     device/samsung/i9100g/sepolicy
 
 BOARD_SEPOLICY_UNION += \
-    file_contexts \
     file.te \
-    device.te \
-    domain.te \
-    pvrsrvinit.te \
-    rild.te \
-    wpa_supplicant.te
+    file_contexts \
+    mediaserver.te \
+	system_app.te \
+	system_server.te \
+	tvout_service.te
 
 # Recovery
 TARGET_RECOVERY_PIXEL_FORMAT := "BGRA_8888"
