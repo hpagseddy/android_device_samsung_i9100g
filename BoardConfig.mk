@@ -107,9 +107,9 @@ BOARD_SEPOLICY_UNION += \
     file.te \
     file_contexts \
     mediaserver.te \
-	system_app.te \
-	system_server.te \
-	tvout_service.te
+    system_app.te \
+    system_server.te \
+    tvout_service.te
 
 # Recovery
 TARGET_RECOVERY_PIXEL_FORMAT := "BGRA_8888"
