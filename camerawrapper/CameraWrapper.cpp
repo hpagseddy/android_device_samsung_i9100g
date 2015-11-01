@@ -21,7 +21,6 @@
 *
 */
 
-
 #define LOG_NDEBUG 0
 //#define LOG_PARAMETERS
 
@@ -55,7 +54,7 @@ camera_module_t HAL_MODULE_INFO_SYM = {
          .module_api_version = CAMERA_MODULE_API_VERSION_1_0,
          .hal_api_version = HARDWARE_HAL_API_VERSION,
          .id = CAMERA_HARDWARE_MODULE_ID,
-         .name: "Exynos4x12 Camera Wrapper",
+         .name = "Exynos4x12 Camera Wrapper",
          .author = "The CyanogenMod Project",
          .methods = &camera_module_methods,
          .dso = NULL, /* remove compilation warnings */
