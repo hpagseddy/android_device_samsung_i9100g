@@ -16,6 +16,8 @@
 
 -include device/samsung/omap4-common/BoardConfigCommon.mk
 
+TARGET_SPECIFIC_HEADER_PATH += device/samsung/i9100g/include
+
 # This variable is set first, so it can be overridden
 # by BoardConfigVendor.mk
 USE_CAMERA_STUB := true
@@ -38,7 +40,15 @@ BOARD_CUSTOM_BOOTIMG_MK := device/samsung/i9100g/shbootimg.mk
 TARGET_KERNEL_SOURCE := kernel/samsung/t1
 TARGET_KERNEL_CONFIG := cyanogenmod_i9100g_defconfig
 
-TARGET_SPECIFIC_HEADER_PATH += device/samsung/i9100g/include
+# External SGX Module
+SGX_MODULES:
+	make clean -C $(COMMON_PATH)/pvr-source/eurasiacon/build/linux2/omap4430_android
+	cp $(TARGET_KERNEL_SOURCE)/drivers/video/omap2/omapfb/omapfb.h $(KERNEL_OUT)/drivers/video/omap2/omapfb/omapfb.h
+	make -j8 -C $(COMMON_PATH)/pvr-source/eurasiacon/build/linux2/omap4430_android ARCH=arm KERNEL_CROSS_COMPILE=arm-eabi- CROSS_COMPILE=arm-eabi- KERNELDIR=$(KERNEL_OUT) TARGET_PRODUCT="blaze_tablet" BUILD=release TARGET_SGX=540 PLATFORM_VERSION=4.0
+	mv $(KERNEL_OUT)/../../target/kbuild/pvrsrvkm_sgx540_120.ko $(KERNEL_MODULES_OUT)
+	$(ARM_EABI_TOOLCHAIN)/arm-eabi-strip --strip-unneeded $(KERNEL_MODULES_OUT)/pvrsrvkm_sgx540_120.ko
+
+TARGET_KERNEL_MODULES += SGX_MODULES
 
 # Init
 TARGET_PROVIDES_INIT := true
@@ -62,6 +72,10 @@ USE_OPENGL_RENDERER := true
 BOARD_CAMERA_HAVE_ISO := true
 COMMON_GLOBAL_CFLAGS += -DHAVE_ISO
 COMMON_GLOBAL_CFLAGS += -DSAMSUNG_CAMERA_HARDWARE
+
+# RIL
+BOARD_PROVIDES_LIBRIL := true
+BOARD_MODEM_TYPE := xmm6260
 
 # Vold
 BOARD_VOLD_MAX_PARTITIONS := 12
@@ -88,7 +102,7 @@ WIFI_DRIVER_MODULE_AP_ARG        := "firmware_path=/system/etc/wifi/bcmdhd_apsta
 WIFI_BAND                        := 802_11_ABG
 BOARD_HAVE_SAMSUNG_WIFI          := true
 BOARD_NO_APSME_ATTR              := true
-BOARD_NO_WIFI_HAL                := true
+#BOARD_NO_WIFI_HAL                := true
 
 # Bluetooth
 BOARD_HAVE_BLUETOOTH := true
