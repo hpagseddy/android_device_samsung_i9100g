@@ -117,14 +117,6 @@ BOARD_USES_SECURE_SERVICES := true
 BOARD_SEPOLICY_DIRS += \
     device/samsung/i9100g/sepolicy
 
-BOARD_SEPOLICY_UNION += \
-    file.te \
-    file_contexts \
-    mediaserver.te \
-    system_app.te \
-    system_server.te \
-    tvout_service.te
-
 # Recovery
 TARGET_RECOVERY_PIXEL_FORMAT := "BGRA_8888"
 BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/samsung/i9100g/recovery/recovery_keys.c
