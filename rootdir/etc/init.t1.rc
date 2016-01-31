@@ -1,73 +1,89 @@
 import init.t1.usb.rc
+import init.omap4.rc
 
 on init
-    export EXTERNAL_STORAGE /storage/sdcard0
-    export SECONDARY_STORAGE /storage/sdcard1
-    mkdir /storage 0775 system system
-    mkdir /storage/sdcard0 0700 root root
-    mkdir /storage/sdcard1 0700 root root
-    mkdir /storage/usbdisk0 0700 root root
-    mkdir /mnt/media_rw/sdcard0 0700 media_rw media_rw
-    mkdir /mnt/media_rw/sdcard1 0700 media_rw media_rw
-    mkdir /mnt/media_rw/usbdisk0 0700 media_rw media_rw
-    mkdir /efs 0771 radio system
-    mkdir /preload 0771 system system
-    mkdir /mnt/.lfs 0755 root root
-
-    # for backwards compatibility
-    symlink /storage/sdcard0 /sdcard
-    symlink /storage/sdcard0 /mnt/sdcard
-    symlink /storage/sdcard1 /extSdCard
-    symlink /storage/sdcard1 /mnt/extSdCard
-    symlink /storage/usbdisk0 /usbdisk0
-    symlink /storage/usbdisk0 /mnt/usbdisk0
-
-    # Preload libjhead for camera
-    export LD_PRELOAD /system/lib/libjhead.so
+    symlink /sdcard /mnt/sdcard
+    symlink /sdcard /storage/sdcard0
 
     # KSM
     write /sys/kernel/mm/ksm/pages_to_scan 100
     write /sys/kernel/mm/ksm/sleep_millisecs 500
     write /sys/kernel/mm/ksm/run 1
 
+    # change permissions for ION driver
+    chmod 0777 /dev/ion
+    
+    # PVR
     chmod 0666 /dev/pvrsrvkm
 
+    # Preload libjhead for camera
+    #export LD_PRELOAD /system/lib/libjhead.so
+    #export LD_PRELOAD "/system/lib/libsamsung_symbols.so"    
+    
 on fs
     mount_all /fstab.t1
+    mkdir /efs
 
-# We chown/chmod /efs because mount is run as root + defaults
+    # We chown/chmod /efs because mount is run as root + defaults
     chown radio system /efs
     chmod 0775 /efs
 
-# Restorecon
+    # Restorecon
     restorecon_recursive /efs
 
-# pvr module
+    # pvr module
     insmod /system/lib/modules/pvrsrvkm_sgx540_120.ko
+    start pvrsrvinit
 
-# change permissions for wifi
-    chmod 0770 /data/misc/wifi 
+on post-fs-data
+    mkdir /data/misc/wifi 0770 wifi wifi
+    mkdir /data/misc/wifi/sockets 0770 wifi wifi
 
-# dmrpc
-	mkdir /data/smc 0770 drmrpc drmrpc
+    # dmrpc
+    mkdir /data/smc 0770 drmrpc drmrpc
     chown drmrpc drmrpc /data/smc/counter.bin
     chown drmrpc drmrpc /data/smc/storage.bin
     chown drmrpc drmrpc /data/smc/system.bin
 
-# change permissions for mtd device
+    # radio
+    mkdir /data/misc/dhcp 0775 dhcp dhcp
+    mkdir /data/misc/radio 0771 radio system
+    mkdir /data/misc/radio/hatp 0771 radio system
+    chown radio radio /data/misc/radio
+
+    chown dhcp dhcp /data/misc/dhcp
+
+    write /sys/devices/system/cpu/cpu0/cpufreq/screen_off_max_freq 800000
+    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/screen_off_max_freq
+
+    #DVFS Lock
+    chown radio system /sys/power/cpufreq_min_limit
+    chown radio system /sys/power/cpufreq_max_limit
+    chown radio system /sys/power/cpufreq_table
+    chmod 0664  /sys/power/cpufreq_min_limit
+    chmod 0664  /sys/power/cpufreq_max_limit
+    chmod 0664  /sys/power/cpufreq_table
+    
+    # misc old...
+    mkdir /efs 0771 radio system
+    mkdir /preload 0771 system system
+    mkdir /mnt 0775 root system
+    mkdir /mnt/.lfs 0755 root root
+  
+    # change permissions for wifi
+    chmod 0770 /data/misc/wifi 
+
+    # change permissions for mtd device
     chmod 0660 /dev/mtd/mtd0
     chown media media /dev/mtd/mtd0
 
-# change permissions for i2c-2 device
+    # change permissions for i2c-2 device
     chmod 0660 /dev/i2c-2
     chown media media /dev/i2c-2
 
-# change permissions for Tiler driver
+    # change permissions for Tiler driver
     chmod 0777 /dev/tiler
     chmod 0777 /dev/dmm
-
-# change permissions for ION driver
-    chmod 0777 /dev/ion
 
     mkdir /data/misc/radio/hatp 0771 radio system
     chown radio radio /data/misc/radio
@@ -78,51 +94,30 @@ on fs
     setprop ro.build.product GT-I9100G
     setprop ro.product.device GT-I9100G
 
-on post-fs-data
-    mkdir /data/misc/wifi 0770 wifi wifi
-    mkdir /data/misc/wifi/sockets 0770 wifi wifi
-    mkdir /data/misc/dhcp 0770 dhcp dhcp
-    mkdir /data/misc/radio 0771 radio system
-    mkdir /data/misc/radio/hatp 0771 radio system
-    chown radio radio /data/misc/radio
-    chown dhcp dhcp /data/misc/dhcp
-    mkdir /data/smc 0770 drmrpc drmrpc
-    chown drmrpc drmrpc /data/smc/counter.bin
-    chown drmrpc drmrpc /data/smc/storage.bin
-    chown drmrpc drmrpc /data/smc/system.bin
-
     # camera calibration
     mkdir /data/misc/camera 0770 media media
     mkdir /data/misc/camera/R5_MVEN003_LD2_ND0_IR0_SH0_FL1_SVEN003_DCCID1044 0770 media media
 
-    setprop vold.post_fs_data_done 1
-
-# MTP Device permission.
+    # MTP Device permission.
     chmod 0660 /dev/usb_mtp_gadget
     chown system system /dev/usb_mtp_gadget
 
-# permission for data/log
+    # permission for data/log
     mkdir /data/log 0775 system log
     chown system log /data/log
     chmod 0775 /data/log
-
-on boot
-#panorama directory creation
-    mkdir /data/pxtmpdir 0775
-    chown system system /data/pxtmpdir
-    chmod 0775 /data/pxtmpdir
-
-# permission for HDMI audio path
+    
+    # permission for HDMI audio path
     chown media audio /sys/class/hdmi_audio/hdmi_audio/hdmi_audio_set_ext
     
-# for hdmi factory test
+    # for hdmi factory test
     chown radio system /sys/devices/platform/omapdss/display1/sec_timing
 
-# Permissions for gpio_keys.
+    # Permissions for gpio_keys.
     chown radio system /sys/class/sec/sec_key/wakeup_keys
     write /sys/class/sec/sec_key/wakeup_keys  102,116
 
-# Add permission for battery
+    # Add permission for battery
     chown system radio /sys/class/power_supply/battery/fg_read_soc
     chown system radio /sys/class/power_supply/battery/fg_reset_soc
     chown system radio /sys/class/power_supply/battery/batt_vol
@@ -147,7 +142,7 @@ on boot
     chown system radio /sys/class/power_supply/battery/batt_vfocv
     chown system radio /sys/class/power_supply/battery/batt_soc
 
-# Permissions for System Server and daemons.
+    # Permissions for System Server and daemons.
     chown radio system /sys/android_power/state
     chown radio system /sys/android_power/request_state
     chown radio system /sys/android_power/acquire_full_wake_lock
@@ -160,14 +155,15 @@ on boot
     chmod 0660 /sys/power/wake_lock
     chmod 0660 /sys/power/wake_unlock
 
-# Change permission for backlight
+    # Change permission for backlight and lcd
     chown system system /sys/class/backlight/panel/brightness
     chmod 0660 /sys/class/backlight/panel/brightness
-
+    chown system radio /sys/class/lcd/panel/lcd_type
+    chown system radio /sys/class/lcd/panel/lcd_power
     chown radio system /sys/class/misc/melfas_touchkey/brightness
     chmod 0660 /sys/class/sec/melfas_touchkey/brightness
     
-# Change permissions for touchkeys
+    # Change permissions for touchkeys
     chown radio system /sys/class/sec/sec_touchkey/touchkey_menu
     chown radio system /sys/class/sec/sec_touchkey/touchkey_back
     chown radio system /sys/class/sec/sec_touchkey/touch_sensitivity
@@ -357,9 +353,20 @@ on boot
     chmod 0660 /sys/class/sec/gps/GPS_PWR_EN/value
     chown system radio /sys/class/sec/gps/GPS_nRST/value
     chmod 0660 /sys/class/sec/gps/GPS_nRST/value
+    
+    setprop vold.post_fs_data_done 1
+
+on boot
+    #panorama directory creation
+    mkdir /data/pxtmpdir 0775
+    chown system system /data/pxtmpdir
+    chmod 0775 /data/pxtmpdir
 
 # for wifi
     mkdir /efs/wifi 0775 system radio
+
+# for hdcp, amwbr
+    mkdir /data/misc/radio 0775 radio system
 
 # ril control auto-suspend
     chmod 0660 /sys/bus/usb/devices/usb1/power/control
@@ -372,19 +379,19 @@ on property:ril.modem.lte.powercontrol=*
     write /sys/bus/usb/devices/1-1/power/control $ril.modem.lte.powercontrol
 
 # initialize the SGX driver
-service pvrsrvinit /system/bin/pvrsrvinit
-    class core
-    user root
-    group root
-    seclabel u:r:pvrsrvinit:s0
-    oneshot
-
-service pvrsrvctl /system/vendor/bin/pvrsrvctl_SGX540_120 --start --no-module
-    class core
-    user root
-    group root
-    seclabel u:r:pvrsrvinit:s0
-    oneshot
+#service pvrsrvinit /system/bin/pvrsrvinit
+#    class core
+#    user root
+#    group root
+#    oneshot
+#    disabled
+    
+#service pvrsrvctl /system/vendor/bin/pvrsrvctl_SGX540_120 --start --no-module
+#    class core
+#    user root
+#    group root
+#    seclabel u:r:pvrsrvinit:s0
+#    oneshot
 
 # SMC Service
 service tf_daemon /system/bin/tf_daemon \
@@ -498,7 +505,7 @@ service TvoutService_C /system/bin/bintvoutservice
 
 # LPM
 on property:ro.bootmode=charger
-    mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/FACTORYFS /system wait
+    mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/FACTORYFS /system wait ro
 
 on property:ro.bootmode=charger
     start pvrsrvctl
@@ -523,3 +530,17 @@ service playlpm /system/bin/playlpm
 service lpmkey /system/bin/lpmkey
     class sec_charger
     user root
+
+## CyanogenMod Performance Profiles
+# Powersave
+on property:sys.perf.profile=0
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor powersave
+
+# Balanced, here interactive governor
+on property:sys.perf.profile=1
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor interactive
+
+# Performance
+on property:sys.perf.profile=2
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor performance
+    
