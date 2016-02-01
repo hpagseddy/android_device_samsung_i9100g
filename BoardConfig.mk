@@ -30,7 +30,6 @@ TARGET_BOARD_OMAP_CPU := 4430
 TARGET_BOOTLOADER_BOARD_NAME := t1
 TARGET_BOARD_INFO_FILE := device/samsung/i9100g/board-info.txt
 
-
 # Inline kernel building
 TARGET_KERNEL_SOURCE := kernel/samsung/t1
 TARGET_KERNEL_CONFIG := cyanogenmod_i9100g_defconfig
