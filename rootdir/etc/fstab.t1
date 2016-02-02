@@ -9,15 +9,15 @@
 /dev/block/platform/omap/omap_hsmmc.1/by-name/DATAFS            /data           f2fs            noatime,nosuid,nodev,barrier=1,noauto_da_alloc,journal_async_commit  wait,check,encryptable=footer
 /dev/block/platform/omap/omap_hsmmc.1/by-name/CACHE             /cache          ext4            noatime,nosuid,nodev,barrier=1,noauto_da_alloc,journal_async_commit  wait,check
 /dev/block/platform/omap/omap_hsmmc.1/by-name/CACHE             /cache          f2fs            noatime,nosuid,nodev,barrier=1,noauto_da_alloc,journal_async_commit  wait,check
-#/dev/block/platform/omap/omap_hsmmc.1/by-name/HIDDEN            /preload        ext4            noatime,nosuid,nodev		                           wait
+/dev/block/platform/omap/omap_hsmmc.1/by-name/HIDDEN            /preload        ext4            noatime,nosuid,nodev		                           wait
 
 # vold-managed volumes ("block device" is actually a sysfs devpath)
-#/devices/platform/omap/omap_hsmmc.1/mmc_host/mmc0*              auto            vfat            defaults                voldmanaged=sdcard0:11,nonremovable,noemulatedsd
+/devices/platform/omap/omap_hsmmc.1/mmc_host/mmc0*              auto            auto            defaults                voldmanaged=sdcard0:11,nonremovable,noemulatedsd
 /devices/platform/omap/omap_hsmmc.0/mmc_host/mmc1*              auto            auto            defaults                voldmanaged=sdcard1:auto,encryptable=userdata
 /devices/platform/omap/musb-omap2430/musb-hdrc/usb1*            auto            auto            defaults                voldmanaged=usbdisk0:auto,noemulatedsd
 
 # zRAM
-/dev/block/zram0                                        none                swap      defaults                                              zramsize=268435456,zramstreams=2
+/dev/block/zram0                                                none            swap            defaults                zramsize=268435456,zramstreams=2
 
 # recovery
 /dev/block/mmcblk0p5                                            /boot           emmc            defaults                recoveryonly
