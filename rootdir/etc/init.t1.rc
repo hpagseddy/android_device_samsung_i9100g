@@ -22,7 +22,7 @@ on init
     
 on fs
     mount_all /fstab.t1
-    swapon_all /fstab.espresso
+    swapon_all /fstab.t1
 
     mkdir /efs
 
