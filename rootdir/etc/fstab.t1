@@ -10,7 +10,7 @@
 /dev/block/platform/omap/omap_hsmmc.1/by-name/HIDDEN            /preload        ext4            noatime,nosuid,nodev		                           wait
 
 # vold-managed volumes ("block device" is actually a sysfs devpath)
-/devices/platform/omap/omap_hsmmc.1/mmc_host/mmc0*              auto            vfat            defaults                voldmanaged=sdcard0:11,noemulatedsd,nonremovable
+/devices/platform/omap/omap_hsmmc.1/mmc_host/mmc0*              auto            auto            defaults                voldmanaged=sdcard0:11,noemulatedsd,nonremovable
 /devices/platform/omap/omap_hsmmc.0/mmc_host/mmc1*              auto            auto            defaults                voldmanaged=sdcard1:auto,encryptable=userdata
 /devices/platform/omap/musb-omap2430/musb-hdrc/usb1*            auto            auto            defaults                voldmanaged=usbdisk0:auto,noemulatedsd
 
