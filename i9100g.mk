@@ -78,7 +78,8 @@ PRODUCT_PACKAGES += \
     camera.omap4 \
     lights.t1 \
     power.t1 \
-    SamsungServiceMode
+    SamsungServiceMode \
+    libsecril-client
 #    hwcomposer.t1 \
 
 # F2FS filesystem
@@ -87,6 +88,10 @@ PRODUCT_PACKAGES += \
     fsck.f2fs \
     fibmap.f2fs \
     f2fstat
+
+# Camera
+PRODUCT_PACKAGES += \
+    Snap
 
 # These are the hardware-specific features
 PRODUCT_COPY_FILES += \
