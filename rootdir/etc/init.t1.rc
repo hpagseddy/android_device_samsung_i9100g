@@ -3,7 +3,9 @@ import init.omap4.rc
 
 on init
     symlink /sdcard /mnt/sdcard
-    symlink /sdcard /storage/sdcard0
+    symlink /sdcard /storage/sdcard
+
+    export LD_SHIM_LIBS /system/lib/libsec-ril.so|libsamsung_symbols.so
 
     # KSM
     write /sys/kernel/mm/ksm/pages_to_scan 100
@@ -424,17 +426,17 @@ service smc_pa /system/bin/smc_pa_ctrl \
     oneshot
 
 # FUSE sdcard daemon for rich permissions (runs as media_rw)
-service fuse_sdcard0 /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/sdcard0 /storage/sdcard0
-    class late_start
-    disabled
+#service fuse_sdcard0 /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/sdcard0 /storage/sdcard0
+#    class late_start
+#    disabled
 
-service fuse_sdcard1 /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/sdcard1 /storage/sdcard1
-    class late_start
-    disabled
+#service fuse_sdcard1 /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/sdcard1 /storage/sdcard1
+#    class late_start
+#    disabled
 
-service fuse_usbdisk0 /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/usbdisk0 /storage/usbdisk0
-    class late_start
-    disabled
+#service fuse_usbdisk0 /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/usbdisk0 /storage/usbdisk0
+#    class late_start
+#    disabled
 
 service p2p_supplicant /system/bin/wpa_supplicant \
     -iwlan0 -Dnl80211 -iwlan0 -c/data/misc/wifi/wpa_supplicant.conf \
