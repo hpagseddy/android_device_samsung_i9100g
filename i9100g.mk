@@ -89,6 +89,9 @@ PRODUCT_PACKAGES += \
     fibmap.f2fs \
     f2fstat
 
+# Netmgr dependency on libstlport
+PRODUCT_PACKAGES +=  libstlport
+
 # Camera
 PRODUCT_PACKAGES += \
     Snap
