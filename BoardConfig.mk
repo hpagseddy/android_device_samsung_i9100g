@@ -25,6 +25,7 @@ TARGET_SPECIFIC_HEADER_PATH += device/samsung/i9100g/include
 TARGET_NO_BOOTLOADER := true
 TARGET_NO_RADIOIMAGE := true
 TARGET_NO_SEPARATE_RECOVERY := true
+# BOARD_CANT_BUILD_RECOVERY_FROM_BOOT_PATCH := true
 
 TARGET_BOARD_OMAP_CPU := 4430
 TARGET_BOOTLOADER_BOARD_NAME := t1
@@ -138,9 +139,6 @@ TARGET_RELEASETOOLS_EXTENSIONS := device/samsung/i9100g
 # TW_THEME := portrait_mdpi
 # TW_HAS_NO_RECOVERY_PARTITION := true
 # TW_EXCLUDE_ENCRYPTED_BACKUPS := true
-
-# Hardware tunables
-# BOARD_HARDWARE_CLASS := hardware/samsung/cmhw
 
 # Egl
 #BOARD_EGL_CFG := device/samsung/i9100g/configs/egl.cfg

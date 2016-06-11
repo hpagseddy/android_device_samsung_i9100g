@@ -18,6 +18,7 @@
 $(call inherit-product, device/samsung/omap4-common/common.mk)
 
 LOCAL_PATH := device/samsung/i9100g
+OMAP4_NEXT_FOLDER := hardware/ti/omap4
 
 DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
 
@@ -56,8 +57,9 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/audio_policy.conf:system/etc/audio_policy.conf
 
 # GPS
+$(call inherit-product, device/common/gps/gps_us_supl.mk)
+
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/configs/gps.conf:system/etc/gps.conf \
     $(LOCAL_PATH)/configs/sirfgps.conf:system/etc/sirfgps.conf
 
 # Media profiles
@@ -82,6 +84,11 @@ PRODUCT_PACKAGES += \
     libsecril-client
 #    hwcomposer.t1 \
 
+PRODUCT_PACKAGES += \
+    audio.a2dp.default \
+    audio.usb.default \
+    audio.r_submix.default
+
 # F2FS filesystem
 PRODUCT_PACKAGES += \
     mkfs.f2fs \
@@ -96,6 +103,14 @@ PRODUCT_PACKAGES +=  libstlport
 PRODUCT_PACKAGES += \
     Snap
 
+# Sensors
+# PRODUCT_PACKAGES += \
+#    sensors.omap4
+    
+# Hardware tunables
+#BOARD_HARDWARE_CLASS += \
+#	$(OMAP4_NEXT_FOLDER)/cmhw
+    
 # These are the hardware-specific features
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.bluetooth_le.xml:system/etc/permissions/android.hardware.bluetooth_le.xml \
@@ -144,6 +159,9 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.sf.lcd_density=240
 
+#PRODUCT_PROPERTY_OVERRIDES += \
+#    dalvik.vm.dex2oat-flags=--no-watch-dog
+    
 PRODUCT_TAGS += dalvik.gc.type-precise
 
 $(call inherit-product, frameworks/native/build/phone-hdpi-512-dalvik-heap.mk)
