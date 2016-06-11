@@ -154,7 +154,7 @@
 /* number of base blocks in a short deep buffer period (screen on) */
 #define DEEP_BUFFER_SHORT_PERIOD_MULTIPLIER (DEEP_BUFFER_SHORT_PERIOD_MS * MULTIPLIER_FACTOR)
 /* number of frames per short deep buffer period (screen on) */
-#define DEEP_BUFFER_SHORT_PERIOD_SIZE (ABE_BASE_FRAME_COUNT * DEEP_BUFFER_SHORT_PERIOD_MULTIPLIER)
+#define DEEP_BUFFER_SHORT_PERIOD_SIZE 882
 /* number of periods for deep buffer playback (screen on) */
 #define PLAYBACK_DEEP_BUFFER_SHORT_PERIOD_COUNT 4
 

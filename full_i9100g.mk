@@ -15,6 +15,7 @@
 #
 
 # Inherit from those products. Most specific first.
+#$(call inherit-product-if-exists, frameworks/base/data/sounds/AudioPackage13.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 $(call inherit-product, device/samsung/i9100g/i9100g.mk)
 
