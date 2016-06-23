@@ -20,31 +20,31 @@ TARGET_SPECIFIC_HEADER_PATH += device/samsung/i9100g/include
 
 # This variable is set first, so it can be overridden
 # by BoardConfigVendor.mk
-USE_CAMERA_STUB := true
+# USE_CAMERA_STUB := true
 
 TARGET_NO_BOOTLOADER := true
 TARGET_NO_RADIOIMAGE := true
+TARGET_NO_SEPARATE_RECOVERY := true
+BOARD_CANT_BUILD_RECOVERY_FROM_BOOT_PATCH := true
 
 TARGET_BOARD_OMAP_CPU := 4430
 TARGET_BOOTLOADER_BOARD_NAME := t1
 TARGET_BOARD_INFO_FILE := device/samsung/i9100g/board-info.txt
 
+# Inline kernel building
+TARGET_KERNEL_SOURCE := kernel/samsung/t1
+TARGET_KERNEL_CONFIG := cyanogenmod_i9100g_defconfig
 BOARD_NAND_PAGE_SIZE := 4096
 BOARD_NAND_SPARE_SIZE := 128
 BOARD_KERNEL_PAGESIZE := 4096
 BOARD_KERNEL_BASE := 0x40000000
-BOARD_KERNEL_CMDLINE :=
-BOARD_CUSTOM_BOOTIMG_MK := device/samsung/i9100g/shbootimg.mk
-
-# Inline kernel building
-TARGET_KERNEL_SOURCE := kernel/samsung/t1
-TARGET_KERNEL_CONFIG := cyanogenmod_i9100g_defconfig
+#BOARD_KERNEL_CMDLINE :=
 
 # External SGX Module
 SGX_MODULES:
-	make clean -C $(COMMON_PATH)/pvr-source/eurasiacon/build/linux2/omap4430_android
+	make clean -C $(HARDWARE_TI_OMAP4_BASE)/pvr-source/eurasiacon/build/linux2/omap4430_android
 	cp $(TARGET_KERNEL_SOURCE)/drivers/video/omap2/omapfb/omapfb.h $(KERNEL_OUT)/drivers/video/omap2/omapfb/omapfb.h
-	make -j8 -C $(COMMON_PATH)/pvr-source/eurasiacon/build/linux2/omap4430_android ARCH=arm KERNEL_CROSS_COMPILE=arm-eabi- CROSS_COMPILE=arm-eabi- KERNELDIR=$(KERNEL_OUT) TARGET_PRODUCT="blaze_tablet" BUILD=release TARGET_SGX=540 PLATFORM_VERSION=4.0
+	make -j8 -C $(HARDWARE_TI_OMAP4_BASE)/pvr-source/eurasiacon/build/linux2/omap4430_android ARCH=arm KERNEL_CROSS_COMPILE=arm-eabi- CROSS_COMPILE=arm-eabi- KERNELDIR=$(KERNEL_OUT) TARGET_PRODUCT="blaze_tablet" BUILD=release TARGET_SGX=540 PLATFORM_VERSION=4.0
 	mv $(KERNEL_OUT)/../../target/kbuild/pvrsrvkm_sgx540_120.ko $(KERNEL_MODULES_OUT)
 	$(ARM_EABI_TOOLCHAIN)/arm-eabi-strip --strip-unneeded $(KERNEL_MODULES_OUT)/pvrsrvkm_sgx540_120.ko
 
@@ -57,25 +57,14 @@ TARGET_PROVIDES_INIT_TARGET_RC := true
 # Filesystem
 TARGET_USERIMAGES_USE_EXT4 := true
 BOARD_BOOTIMAGE_PARTITION_SIZE := 8388608
+BOARD_CACHEIMAGE_PARTITION_SIZE := 734003200
+BOARD_RECOVERYIMAGE_PARTITION_SIZE := 8388608
 BOARD_SYSTEMIMAGE_PARTITION_SIZE := 1073741824
 BOARD_USERDATAIMAGE_PARTITION_SIZE := 2147483648
 BOARD_FLASH_BLOCK_SIZE := 4096
 
-# Hardware tunables
-BOARD_HARDWARE_CLASS := hardware/samsung/cmhw
-
-# Egl
-BOARD_EGL_CFG := device/samsung/i9100g/configs/egl.cfg
-USE_OPENGL_RENDERER := true
-
-# Camera
-BOARD_CAMERA_HAVE_ISO := true
-COMMON_GLOBAL_CFLAGS += -DHAVE_ISO
-COMMON_GLOBAL_CFLAGS += -DSAMSUNG_CAMERA_HARDWARE
-
-# RIL
-BOARD_PROVIDES_LIBRIL := true
-BOARD_MODEM_TYPE := xmm6260
+# F2FS filesystem
+TARGET_USERIMAGES_USE_F2FS := true
 
 # Vold
 BOARD_VOLD_MAX_PARTITIONS := 12
@@ -109,9 +98,71 @@ BOARD_HAVE_BLUETOOTH := true
 BOARD_HAVE_BLUETOOTH_BCM := true
 BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/samsung/i9100g/bluetooth
 BOARD_BLUEDROID_VENDOR_CONF := device/samsung/i9100g/bluetooth/vnd_i9100g.txt
+BOARD_USE_TI_DUCATI_H264_PROFILE := true
+BOARD_HAVE_SAMSUNG_BLUETOOTH := true
+
+# Charger
+BOARD_CHARGER_SHOW_PERCENTAGE := true
+
+# Disable journaling on system.img to save space.
+BOARD_SYSTEMIMAGE_JOURNAL_SIZE := 0
+
+# Liblights
+TARGET_PROVIDES_LIBLIGHT := true
+
+# Selinux
+BOARD_SEPOLICY_DIRS += \
+    device/samsung/i9100g/sepolicy
+
+# Recovery
+TARGET_RECOVERY_PIXEL_FORMAT := "BGRA_8888"
+BOARD_UMS_LUNFILE := "/sys/class/android_usb/f_mass_storage/lun0/file"
+BOARD_USES_MMCUTILS := true
+BOARD_HAS_NO_MISC_PARTITION := true
+BOARD_HAS_NO_SELECT_BUTTON := true
+BOARD_SUPPRESS_EMMC_WIPE := true
+TARGET_RECOVERY_FSTAB := device/samsung/i9100g/rootdir/etc/fstab.t1
+TARGET_RECOVERY_DEVICE_DIRS += device/samsung/i9100g
+RECOVERY_FSTAB_VERSION := 2
+BOARD_HAS_DOWNLOAD_MODE := true
+BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/samsung/i9100g/recovery/root/recovery_keys.c
+BOARD_CUSTOM_BOOTIMG_MK := device/samsung/i9100g/shbootimg.mk
+
+# RIL
+BOARD_VENDOR := samsung
+BOARD_PROVIDES_LIBRIL := true
+BOARD_MODEM_TYPE := xmm6260
+
+# assert
+TARGET_OTA_ASSERT_DEVICE := i9100g,GT-I9100G
+
+# device-specific extensions to the updater binary
+TARGET_RELEASETOOLS_EXTENSIONS := device/samsung/i9100g
+
+# TWRP
+# TW_THEME := portrait_mdpi
+# TW_HAS_NO_RECOVERY_PARTITION := true
+# TW_EXCLUDE_ENCRYPTED_BACKUPS := true
+
+# Egl
+#BOARD_EGL_CFG := device/samsung/i9100g/configs/egl.cfg
+#USE_OPENGL_RENDERER := true
+
+# S2-COMMON-Settings:
+# BOARD_EGL_NEEDS_FNW := true
+# BOARD_EGL_NEEDS_HANDLE_VALUE=true
+# BOARD_EGL_SKIP_FIRST_DEQUEUE := true
+# BOARD_EGL_SYSTEMUI_PBSIZE_HACK := true
+# TARGET_REQUIRES_SYNCHRONOUS_SETSURFACE := true
+# COMMON_GLOBAL_CFLAGS += -DFORCE_SCREENSHOT_CPU_PATH -DWORKAROUND_BUG_10194508
+
+# Camera
+# BOARD_CAMERA_HAVE_ISO := true
+# COMMON_GLOBAL_CFLAGS += -DHAVE_ISO
+# COMMON_GLOBAL_CFLAGS += -DSAMSUNG_CAMERA_HARDWARE
 
 # Security
-BOARD_USES_SECURE_SERVICES := true
+#BOARD_USES_SECURE_SERVICES := true
 
 # Selinux
 BOARD_SEPOLICY_DIRS += \
@@ -124,27 +175,6 @@ BOARD_SEPOLICY_UNION += \
     system_app.te \
     system_server.te \
     tvout_service.te
-
-# Recovery
-TARGET_RECOVERY_PIXEL_FORMAT := "BGRA_8888"
-BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/samsung/i9100g/recovery/recovery_keys.c
-BOARD_UMS_LUNFILE := "/sys/class/android_usb/f_mass_storage/lun0/file"
-BOARD_USES_MMCUTILS := true
-BOARD_HAS_NO_MISC_PARTITION := true
-BOARD_HAS_NO_SELECT_BUTTON := true
-TARGET_RECOVERY_FSTAB := device/samsung/i9100g/rootdir/fstab.t1
-RECOVERY_FSTAB_VERSION := 2
-
-# assert
-TARGET_OTA_ASSERT_DEVICE := i9100g,GT-I9100G
-
-# device-specific extensions to the updater binary
-TARGET_RELEASETOOLS_EXTENSIONS := device/samsung/i9100g
-
-# TWRP
-TW_THEME := portrait_mdpi
-TW_HAS_NO_RECOVERY_PARTITION := true
-TW_EXCLUDE_ENCRYPTED_BACKUPS := true
 
 # Releasetools
 TARGET_RELEASETOOL_OTA_FROM_TARGET_SCRIPT := ./device/samsung/i9100g/releasetools/t1_ota_from_target_files
