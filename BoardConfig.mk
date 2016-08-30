@@ -127,6 +127,7 @@ RECOVERY_FSTAB_VERSION := 2
 BOARD_HAS_DOWNLOAD_MODE := true
 BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/samsung/i9100g/recovery/root/recovery_keys.c
 BOARD_CUSTOM_BOOTIMG_MK := device/samsung/i9100g/shbootimg.mk
+TARGET_RECOVERY_DENSITY := mdpi
 
 # RIL
 BOARD_VENDOR := samsung
