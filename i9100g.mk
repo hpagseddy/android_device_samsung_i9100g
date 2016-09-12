@@ -56,7 +56,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/audio_policy.conf:system/etc/audio_policy.conf \
     $(LOCAL_PATH)/configs/audio_effects.conf:system/etc/audio_effects.conf \
     $(LOCAL_PATH)/configs/audio_effects.conf:system/vendor/etc/audio_effects.conf
-    
+
 # GPS
 $(call inherit-product, device/common/gps/gps_us_supl.mk)
 
@@ -105,11 +105,11 @@ PRODUCT_PACKAGES += \
 # Sensors
 # PRODUCT_PACKAGES += \
 #    sensors.omap4
-    
+
 # Hardware tunables
-#BOARD_HARDWARE_CLASS += \
-#	$(OMAP4_NEXT_FOLDER)/cmhw
-    
+BOARD_HARDWARE_CLASS += \
+	$(OMAP4_NEXT_FOLDER)/cmhw
+
 # These are the hardware-specific features
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.bluetooth_le.xml:system/etc/permissions/android.hardware.bluetooth_le.xml \
@@ -134,10 +134,9 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.wifi.xml:system/etc/permissions/android.hardware.wifi.xml \
     frameworks/native/data/etc/android.software.sip.voip.xml:system/etc/permissions/android.software.sip.voip.xml \
     frameworks/native/data/etc/android.software.sip.xml:system/etc/permissions/android.software.sip.xml \
-    frameworks/native/data/etc/handheld_core_hardware.xml:system/etc/permissions/handheld_core_hardware.xml
+    frameworks/native/data/etc/handheld_core_hardware.xml:system/etc/permissions/handheld_core_hardware.xml \
+    frameworks/native/data/etc/android.hardware.audio.low_latency.xml:system/etc/permissions/android.hardware.audio.low_latency.xml
 
-#    frameworks/native/data/etc/android.hardware.audio.low_latency.xml:system/etc/permissions/android.hardware.audio.low_latency.xml \
-    
 # RIL
 PRODUCT_PROPERTY_OVERRIDES += \
     mobiledata.interfaces=pdp0,wlan0,gprs,ppp0 \
@@ -145,8 +144,8 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.ril.gprsclass=10
 
 # Feature live wallpaper
-PRODUCT_COPY_FILES += \
-    packages/wallpapers/LivePicker/android.software.live_wallpaper.xml:system/etc/permissions/android.software.live_wallpaper.xml
+# PRODUCT_COPY_FILES += \
+#    packages/wallpapers/LivePicker/android.software.live_wallpaper.xml:system/etc/permissions/android.software.live_wallpaper.xml
 
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.opengles.version=131072
@@ -160,7 +159,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 #PRODUCT_PROPERTY_OVERRIDES += \
 #    dalvik.vm.dex2oat-flags=--no-watch-dog
-    
+
 PRODUCT_TAGS += dalvik.gc.type-precise
 
 $(call inherit-product, frameworks/native/build/phone-hdpi-512-dalvik-heap.mk)

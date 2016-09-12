@@ -158,14 +158,24 @@
 /* number of periods for deep buffer playback (screen on) */
 #define PLAYBACK_DEEP_BUFFER_SHORT_PERIOD_COUNT 4
 
+#define DEEP_BUFFER_SHORT_PERIOD_WRITE_THRES \
+                            (DEEP_BUFFER_SHORT_PERIOD_SIZE * PLAYBACK_DEEP_BUFFER_SHORT_PERIOD_COUNT)
+#define DEEP_BUFFER_SHORT_PERIOD_START_THRES \
+                            ((DEEP_BUFFER_SHORT_PERIOD_SIZE * PLAYBACK_DEEP_BUFFER_SHORT_PERIOD_COUNT) / 2)
+
 /* number of short deep buffer periods in a long period */
-#define DEEP_BUFFER_LONG_PERIOD_MULTIPLIER \
-                            (DEEP_BUFFER_LONG_PERIOD_MS / DEEP_BUFFER_SHORT_PERIOD_MS)
+#define DEEP_BUFFER_LONG_PERIOD_MULTIPLIER 7
+
 /* number of frames per long deep buffer period (screen off) */
 #define DEEP_BUFFER_LONG_PERIOD_SIZE \
                             (DEEP_BUFFER_SHORT_PERIOD_SIZE * DEEP_BUFFER_LONG_PERIOD_MULTIPLIER)
 /* number of periods for deep buffer playback (screen off) */
 #define PLAYBACK_DEEP_BUFFER_LONG_PERIOD_COUNT 2
+
+#define DEEP_BUFFER_LONG_PERIOD_WRITE_THRES \
+                            (DEEP_BUFFER_LONG_PERIOD_SIZE * PLAYBACK_DEEP_BUFFER_LONG_PERIOD_COUNT)
+#define DEEP_BUFFER_LONG_PERIOD_START_THRES \
+                            ((DEEP_BUFFER_LONG_PERIOD_SIZE * PLAYBACK_DEEP_BUFFER_LONG_PERIOD_COUNT) / 2)
 
 /* number of frames per period for HDMI multichannel output */
 #define HDMI_MULTI_PERIOD_SIZE  1024
@@ -299,8 +309,10 @@ struct pcm_config pcm_config_mm = {
     .period_size = DEEP_BUFFER_LONG_PERIOD_SIZE,
     .period_count = PLAYBACK_DEEP_BUFFER_LONG_PERIOD_COUNT,
     .format = PCM_FORMAT_S16_LE,
-    .start_threshold = DEEP_BUFFER_SHORT_PERIOD_SIZE * 2,
+    .start_threshold = DEEP_BUFFER_SHORT_PERIOD_START_THRES,
+#if 0
     .avail_min = DEEP_BUFFER_LONG_PERIOD_SIZE,
+#endif
 };
 
 /* low latency */
@@ -1440,7 +1452,7 @@ static int start_output_stream_low_latency(struct t1_stream_out *out)
     if (success) {
         out->buffer_frames = pcm_config_tones.period_size * 2;
         if (out->buffer == NULL)
-            out->buffer = malloc(out->buffer_frames * audio_stream_frame_size(&out->stream.common));
+            out->buffer = malloc(out->buffer_frames * audio_stream_out_frame_size(&out->stream));
 
         if (adev->echo_reference != NULL)
             out->echo_reference = adev->echo_reference;
@@ -1461,9 +1473,6 @@ static int start_output_stream_deep_buffer(struct t1_stream_out *out)
         select_output_device(adev);
     }
 
-    out->write_threshold = PLAYBACK_DEEP_BUFFER_LONG_PERIOD_COUNT * DEEP_BUFFER_LONG_PERIOD_SIZE;
-    out->use_long_periods = true;
-
     out->config[PCM_NORMAL] = pcm_config_mm;
     out->config[PCM_NORMAL].rate = MM_FULL_POWER_SAMPLING_RATE;
     out->pcm[PCM_NORMAL] = pcm_open(CARD_T1_DEFAULT, PORT_MM,
@@ -1474,9 +1483,19 @@ static int start_output_stream_deep_buffer(struct t1_stream_out *out)
         out->pcm[PCM_NORMAL] = NULL;
         return -ENOMEM;
     }
+
+    out->use_long_periods = adev->screen_off && !adev->active_input;
+    if (out->use_long_periods) {
+        pcm_set_avail_min(out->pcm[PCM_NORMAL], DEEP_BUFFER_LONG_PERIOD_SIZE);
+        out->write_threshold = DEEP_BUFFER_LONG_PERIOD_WRITE_THRES;
+    } else {
+        pcm_set_avail_min(out->pcm[PCM_NORMAL], DEEP_BUFFER_SHORT_PERIOD_WRITE_THRES);
+        out->write_threshold = DEEP_BUFFER_SHORT_PERIOD_WRITE_THRES;
+    }
+
     out->buffer_frames = DEEP_BUFFER_SHORT_PERIOD_SIZE * 2;
     if (out->buffer == NULL)
-        out->buffer = malloc(out->buffer_frames * audio_stream_frame_size(&out->stream.common));
+        out->buffer = malloc(PLAYBACK_DEEP_BUFFER_LONG_PERIOD_COUNT * DEEP_BUFFER_LONG_PERIOD_SIZE);
 
     return 0;
 }
@@ -1583,7 +1602,7 @@ static void put_echo_reference(struct t1_audio_device *adev,
 }
 
 static struct echo_reference_itfe *get_echo_reference(struct t1_audio_device *adev,
-                                               audio_format_t format,
+                                               audio_format_t format __unused,
                                                uint32_t channel_count,
                                                uint32_t sampling_rate)
 {
@@ -1644,19 +1663,19 @@ static int get_playback_delay(struct t1_stream_out *out,
     return 0;
 }
 
-static uint32_t out_get_sample_rate(const struct audio_stream *stream)
+static uint32_t out_get_sample_rate(const struct audio_stream *stream __unused)
 {
     return DEFAULT_OUT_SAMPLING_RATE;
 }
 
-static uint32_t out_get_sample_rate_hdmi(const struct audio_stream *stream)
+static uint32_t out_get_sample_rate_hdmi(const struct audio_stream *stream __unused)
 {
     struct t1_stream_out *out = (struct t1_stream_out *)stream;
 
     return out->config[PCM_HDMI].rate;
 }
 
-static int out_set_sample_rate(struct audio_stream *stream, uint32_t rate)
+static int out_set_sample_rate(struct audio_stream *stream __unused, uint32_t rate __unused)
 {
     return 0;
 }
@@ -1671,7 +1690,7 @@ static size_t out_get_buffer_size_low_latency(const struct audio_stream *stream)
     from pcm_config_tones.rate. */
     size_t size = (SHORT_PERIOD_SIZE * DEFAULT_OUT_SAMPLING_RATE) / pcm_config_tones.rate;
     size = ((size + 15) / 16) * 16;
-    return size * audio_stream_frame_size((struct audio_stream *)stream);
+    return size * audio_stream_out_frame_size((const struct audio_stream_out *)stream);
 }
 
 static size_t out_get_buffer_size_deep_buffer(const struct audio_stream *stream)
@@ -1685,12 +1704,12 @@ static size_t out_get_buffer_size_deep_buffer(const struct audio_stream *stream)
     size_t size = (DEEP_BUFFER_SHORT_PERIOD_SIZE * DEFAULT_OUT_SAMPLING_RATE) /
                         pcm_config_mm.rate;
     size = ((size + 15) / 16) * 16;
-    return size * audio_stream_frame_size((struct audio_stream *)stream);
+    return size * audio_stream_out_frame_size((const struct audio_stream_out *)stream);
 }
 
 static size_t out_get_buffer_size_hdmi(const struct audio_stream *stream)
 {
-    return HDMI_MULTI_PERIOD_SIZE * audio_stream_frame_size((struct audio_stream *)stream);
+    return HDMI_MULTI_PERIOD_SIZE * audio_stream_out_frame_size((const struct audio_stream_out *)stream);
 }
 
 static audio_channel_mask_t out_get_channels(const struct audio_stream *stream)
@@ -1700,12 +1719,12 @@ static audio_channel_mask_t out_get_channels(const struct audio_stream *stream)
     return out->channel_mask;
 }
 
-static audio_format_t out_get_format(const struct audio_stream *stream)
+static audio_format_t out_get_format(const struct audio_stream *stream __unused)
 {
     return AUDIO_FORMAT_PCM_16_BIT;
 }
 
-static int out_set_format(struct audio_stream *stream, audio_format_t format)
+static int out_set_format(struct audio_stream *stream __unused, audio_format_t format __unused)
 {
     return 0;
 }
@@ -1774,7 +1793,7 @@ static int out_standby(struct audio_stream *stream)
     return status;
 }
 
-static int out_dump(const struct audio_stream *stream, int fd)
+static int out_dump(const struct audio_stream *stream __unused, int fd __unused)
 {
     return 0;
 }
@@ -1937,7 +1956,7 @@ static ssize_t out_write_low_latency(struct audio_stream_out *stream, const void
     int ret;
     struct t1_stream_out *out = (struct t1_stream_out *)stream;
     struct t1_audio_device *adev = out->dev;
-    size_t frame_size = audio_stream_frame_size(&out->stream.common);
+    size_t frame_size = audio_stream_out_frame_size(stream);
     size_t in_frames = bytes / frame_size;
     size_t out_frames = in_frames;
     bool force_input_standby = false;
@@ -2005,7 +2024,7 @@ exit:
     pthread_mutex_unlock(&out->lock);
 
     if (ret != 0) {
-        usleep(bytes * 1000000 / audio_stream_frame_size(&stream->common) /
+        usleep(bytes * 1000000 / audio_stream_out_frame_size(stream) /
                out_get_sample_rate(&stream->common));
     }
 
@@ -2029,7 +2048,7 @@ static ssize_t out_write_deep_buffer(struct audio_stream_out *stream, const void
     int ret;
     struct t1_stream_out *out = (struct t1_stream_out *)stream;
     struct t1_audio_device *adev = out->dev;
-    size_t frame_size = audio_stream_frame_size(&out->stream.common);
+    size_t frame_size = audio_stream_out_frame_size(stream);
     size_t in_frames = bytes / frame_size;
     size_t out_frames;
     bool use_long_periods;
@@ -2054,18 +2073,14 @@ static ssize_t out_write_deep_buffer(struct audio_stream_out *stream, const void
     pthread_mutex_unlock(&adev->lock);
 
     if (use_long_periods != out->use_long_periods) {
-        size_t period_size;
-        size_t period_count;
 
         if (use_long_periods) {
-            period_size = DEEP_BUFFER_LONG_PERIOD_SIZE;
-            period_count = PLAYBACK_DEEP_BUFFER_LONG_PERIOD_COUNT;
+            pcm_set_avail_min(out->pcm[PCM_NORMAL], DEEP_BUFFER_LONG_PERIOD_SIZE);
+            out->write_threshold = DEEP_BUFFER_LONG_PERIOD_WRITE_THRES;
         } else {
-            period_size = DEEP_BUFFER_SHORT_PERIOD_SIZE;
-            period_count = PLAYBACK_DEEP_BUFFER_SHORT_PERIOD_COUNT;
+            pcm_set_avail_min(out->pcm[PCM_NORMAL], DEEP_BUFFER_SHORT_PERIOD_SIZE);
+            out->write_threshold = DEEP_BUFFER_SHORT_PERIOD_WRITE_THRES;
         }
-        out->write_threshold = period_size * period_count;
-        pcm_set_avail_min(out->pcm[PCM_NORMAL], period_size);
         out->use_long_periods = use_long_periods;
     }
 
@@ -2108,7 +2123,7 @@ exit:
     pthread_mutex_unlock(&out->lock);
 
     if (ret != 0) {
-        usleep(bytes * 1000000 / audio_stream_frame_size(&stream->common) /
+        usleep(bytes * 1000000 / audio_stream_out_frame_size(stream) /
                out_get_sample_rate(&stream->common));
     }
 
@@ -2121,7 +2136,7 @@ static ssize_t out_write_hdmi(struct audio_stream_out *stream, const void* buffe
     int ret;
     struct t1_stream_out *out = (struct t1_stream_out *)stream;
     struct t1_audio_device *adev = out->dev;
-    size_t frame_size = audio_stream_frame_size(&out->stream.common);
+    size_t frame_size = audio_stream_out_frame_size(stream);
     size_t in_frames = bytes / frame_size;
 
     /* acquiring hw device mutex systematically is useful if a low priority thread is waiting
@@ -2151,7 +2166,7 @@ exit:
     pthread_mutex_unlock(&out->lock);
 
     if (ret != 0) {
-        usleep(bytes * 1000000 / audio_stream_frame_size(&stream->common) /
+        usleep(bytes * 1000000 / audio_stream_out_frame_size(stream) /
                out_get_sample_rate_hdmi(&stream->common));
     }
     /* FIXME: workaround for HDMI multi channel channel swap on first playback after opening
@@ -2163,18 +2178,18 @@ exit:
     return bytes;
 }
 
-static int out_get_render_position(const struct audio_stream_out *stream,
-                                   uint32_t *dsp_frames)
+static int out_get_render_position(const struct audio_stream_out *stream __unused,
+                                   uint32_t *dsp_frames __unused)
 {
     return -EINVAL;
 }
 
-static int out_add_audio_effect(const struct audio_stream *stream, effect_handle_t effect)
+static int out_add_audio_effect(const struct audio_stream *stream __unused, effect_handle_t effect __unused)
 {
     return 0;
 }
 
-static int out_remove_audio_effect(const struct audio_stream *stream, effect_handle_t effect)
+static int out_remove_audio_effect(const struct audio_stream *stream __unused, effect_handle_t effect __unused)
 {
     return 0;
 }
@@ -2249,7 +2264,7 @@ static uint32_t in_get_sample_rate(const struct audio_stream *stream)
     return in->requested_rate;
 }
 
-static int in_set_sample_rate(struct audio_stream *stream, uint32_t rate)
+static int in_set_sample_rate(struct audio_stream *stream __unused, uint32_t rate __unused)
 {
     return 0;
 }
@@ -2270,12 +2285,12 @@ static audio_channel_mask_t in_get_channels(const struct audio_stream *stream)
     return in->main_channels;
 }
 
-static audio_format_t in_get_format(const struct audio_stream *stream)
+static audio_format_t in_get_format(const struct audio_stream *stream __unused)
 {
     return AUDIO_FORMAT_PCM_16_BIT;
 }
 
-static int in_set_format(struct audio_stream *stream, audio_format_t format)
+static int in_set_format(struct audio_stream *stream __unused, audio_format_t format __unused)
 {
     return 0;
 }
@@ -2320,7 +2335,7 @@ static int in_standby(struct audio_stream *stream)
     return status;
 }
 
-static int in_dump(const struct audio_stream *stream, int fd)
+static int in_dump(const struct audio_stream *stream __unused, int fd __unused)
 {
     return 0;
 }
@@ -2371,13 +2386,13 @@ static int in_set_parameters(struct audio_stream *stream, const char *kvpairs)
     return ret;
 }
 
-static char * in_get_parameters(const struct audio_stream *stream,
-                                const char *keys)
+static char * in_get_parameters(const struct audio_stream *stream __unused,
+                                const char *keys __unused)
 {
     return strdup("");
 }
 
-static int in_set_gain(struct audio_stream_in *stream, float gain)
+static int in_set_gain(struct audio_stream_in *stream __unused, float gain __unused)
 {
     return 0;
 }
@@ -2494,8 +2509,9 @@ static int set_preprocessor_echo_delay(effect_handle_t handle,
 
     param->psize = sizeof(uint32_t);
     param->vsize = sizeof(uint32_t);
-    *(uint32_t *)param->data = AEC_PARAM_ECHO_DELAY;
-    *((int32_t *)param->data + 1) = delay_us;
+    uint32_t ed = AEC_PARAM_ECHO_DELAY;
+    memcpy(&param->data, &ed, sizeof(uint32_t));
+    memcpy((void*)(&param->data) + sizeof(int32_t), &delay_us, sizeof(int32_t));
 
     return set_preprocessor_param(handle, param);
 }
@@ -2769,7 +2785,7 @@ static ssize_t in_read(struct audio_stream_in *stream, void* buffer,
     int ret = 0;
     struct t1_stream_in *in = (struct t1_stream_in *)stream;
     struct t1_audio_device *adev = in->dev;
-    size_t frames_rq = bytes / audio_stream_frame_size(&stream->common);
+    size_t frames_rq = bytes / audio_stream_in_frame_size(&stream->common);
 
     /* acquiring hw device mutex systematically is useful if a low priority thread is waiting
      * on the input stream mutex - e.g. executing select_mode() while holding the hw device
@@ -2802,14 +2818,14 @@ static ssize_t in_read(struct audio_stream_in *stream, void* buffer,
 
 exit:
     if (ret < 0)
-        usleep(bytes * 1000000 / audio_stream_frame_size(&stream->common) /
+        usleep(bytes * 1000000 / audio_stream_in_frame_size(&stream->common) /
                in_get_sample_rate(&stream->common));
 
     pthread_mutex_unlock(&in->lock);
     return bytes;
 }
 
-static uint32_t in_get_input_frames_lost(struct audio_stream_in *stream)
+static uint32_t in_get_input_frames_lost(struct audio_stream_in *stream __unused)
 {
     return 0;
 }
@@ -2862,7 +2878,7 @@ static int in_configure_reverse(struct t1_stream_in *in)
 
 #define MAX_NUM_CHANNEL_CONFIGS 10
 
-static void in_read_audio_effect_channel_configs(struct t1_stream_in *in,
+static void in_read_audio_effect_channel_configs(struct t1_stream_in *in __unused,
                                                  struct effect_info_s *effect_info)
 {
     /* size and format of the cmd are defined in hardware/audio_effect.h */
@@ -3224,11 +3240,12 @@ static int out_read_hdmi_channel_masks(struct t1_stream_out *out) {
 }
 
 static int adev_open_output_stream(struct audio_hw_device *dev,
-                                   audio_io_handle_t handle,
-                                   audio_devices_t devices,
-                                   audio_output_flags_t flags,
+                                   audio_io_handle_t handle __unused,
+                                   audio_devices_t devices __unused,
+                                   audio_output_flags_t flags __unused,
                                    struct audio_config *config,
-                                   struct audio_stream_out **stream_out)
+                                   struct audio_stream_out **stream_out,
+			           const char *address __unused)
 {
     struct t1_audio_device *ladev = (struct t1_audio_device *)dev;
     struct t1_stream_out *out;
@@ -3433,18 +3450,18 @@ static int adev_set_parameters(struct audio_hw_device *dev, const char *kvpairs)
     return ret;
 }
 
-static char * adev_get_parameters(const struct audio_hw_device *dev,
-                                  const char *keys)
+static char * adev_get_parameters(const struct audio_hw_device *dev __unused,
+                                  const char *keys __unused)
 {
     return strdup("");
 }
 
-static int adev_init_check(const struct audio_hw_device *dev)
+static int adev_init_check(const struct audio_hw_device *dev __unused)
 {
     return 0;
 }
 
-static int adev_set_voice_volume(struct audio_hw_device *dev, float volume)
+static int adev_set_voice_volume(struct audio_hw_device *dev __unused, float volume __unused)
 {
     struct t1_audio_device *adev = (struct t1_audio_device *)dev;
 
@@ -3495,7 +3512,7 @@ static int adev_get_mic_mute(const struct audio_hw_device *dev, bool *state)
     return 0;
 }
 
-static size_t adev_get_input_buffer_size(const struct audio_hw_device *dev,
+static size_t adev_get_input_buffer_size(const struct audio_hw_device *dev __unused,
                                          const struct audio_config *config)
 {
     size_t size;
@@ -3507,10 +3524,13 @@ static size_t adev_get_input_buffer_size(const struct audio_hw_device *dev,
 }
 
 static int adev_open_input_stream(struct audio_hw_device *dev,
-                                  audio_io_handle_t handle,
+                                  audio_io_handle_t handle __unused,
                                   audio_devices_t devices,
                                   struct audio_config *config,
-                                  struct audio_stream_in **stream_in)
+                                  struct audio_stream_in **stream_in,
+				  audio_input_flags_t flags __unused,
+                                  const char *address __unused,
+                                  audio_source_t source __unused)
 {
     struct t1_audio_device *ladev = (struct t1_audio_device *)dev;
     struct t1_stream_in *in;
@@ -3583,7 +3603,7 @@ err:
     return ret;
 }
 
-static void adev_close_input_stream(struct audio_hw_device *dev,
+static void adev_close_input_stream(struct audio_hw_device *dev __unused,
                                    struct audio_stream_in *stream)
 {
     struct t1_stream_in *in = (struct t1_stream_in *)stream;
@@ -3610,7 +3630,7 @@ static void adev_close_input_stream(struct audio_hw_device *dev,
     return;
 }
 
-static int adev_dump(const audio_hw_device_t *device, int fd)
+static int adev_dump(const audio_hw_device_t *device __unused, int fd __unused)
 {
     return 0;
 }
