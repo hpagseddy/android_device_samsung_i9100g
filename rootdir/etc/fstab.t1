@@ -5,8 +5,10 @@
 
 /dev/block/platform/omap/omap_hsmmc.1/by-name/FACTORYFS         /system         ext4            ro,noatime                                                 wait
 /dev/block/platform/omap/omap_hsmmc.1/by-name/EFS               /efs            ext4            noatime,nosuid,nodev,errors=panic                          wait,check
-/dev/block/platform/omap/omap_hsmmc.1/by-name/DATAFS            /data           ext4            noatime,nosuid,nodev,errors=panic,discard,noauto_da_alloc  wait,check,encryptable=/efs/metadata
-/dev/block/platform/omap/omap_hsmmc.1/by-name/CACHE             /cache          ext4            noatime,nosuid,nodev,errors=panic                          wait,check
+/dev/block/platform/omap/omap_hsmmc.1/by-name/DATAFS            /data           ext4            noatime,nosuid,nodev,barrier=1,noauto_da_alloc,journal_async_commit  wait,check,encryptable=footer
+/dev/block/platform/omap/omap_hsmmc.1/by-name/DATAFS            /data           f2fs            noatime,nosuid,nodev,background_gc=off,inline_xattr,active_logs=2	wait,encryptable=footer
+/dev/block/platform/omap/omap_hsmmc.1/by-name/CACHE             /cache          ext4            noatime,nosuid,nodev,barrier=1,noauto_da_alloc,journal_async_commit                          wait,check
+/dev/block/platform/omap/omap_hsmmc.1/by-name/CACHE             /cache          f2fs	noatime,nodiratime,nosuid,nodev,background_gc=off,inline_xattr,active_logs=2                          wait
 /dev/block/platform/omap/omap_hsmmc.1/by-name/HIDDEN            /preload        ext4            noatime,nosuid,nodev		                           wait
 
 # vold-managed volumes ("block device" is actually a sysfs devpath)
