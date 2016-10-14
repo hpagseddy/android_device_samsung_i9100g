@@ -49,7 +49,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PROPERTY_OVERRIDES += \
     wifi.interface=wlan0 \
     wifi.supplicant_scan_interval=30
-#    net.tethering.noprovisioning=true
 
 # Audio
 PRODUCT_COPY_FILES += \
@@ -83,7 +82,6 @@ PRODUCT_PACKAGES += \
     power.t1 \
     SamsungServiceMode \
     libsecril-client
-#    hwcomposer.t1 \
 
 PRODUCT_PACKAGES += \
     audio.r_submix.default
@@ -101,10 +99,6 @@ PRODUCT_PACKAGES +=  libstlport
 # Camera
 PRODUCT_PACKAGES += \
     Snap
-
-# Sensors
-# PRODUCT_PACKAGES += \
-#    sensors.omap4
 
 # Hardware tunables
 BOARD_HARDWARE_CLASS += \
@@ -142,10 +136,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
     mobiledata.interfaces=pdp0,wlan0,gprs,ppp0 \
     ro.ril.hsxpa=1 \
     ro.ril.gprsclass=10
-
-# Feature live wallpaper
-# PRODUCT_COPY_FILES += \
-#    packages/wallpapers/LivePicker/android.software.live_wallpaper.xml:system/etc/permissions/android.software.live_wallpaper.xml
 
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.opengles.version=131072

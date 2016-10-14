@@ -18,10 +18,6 @@
 
 TARGET_SPECIFIC_HEADER_PATH += device/samsung/i9100g/include
 
-# This variable is set first, so it can be overridden
-# by BoardConfigVendor.mk
-#USE_CAMERA_STUB := true
-
 TARGET_NO_BOOTLOADER := true
 TARGET_NO_RADIOIMAGE := true
 TARGET_NO_SEPARATE_RECOVERY := true
@@ -148,26 +144,6 @@ TARGET_RELEASETOOLS_EXTENSIONS := device/samsung/i9100g
 # TW_THEME := portrait_mdpi
 # TW_HAS_NO_RECOVERY_PARTITION := true
 # TW_EXCLUDE_ENCRYPTED_BACKUPS := true
-
-# Egl
-#BOARD_EGL_CFG := device/samsung/i9100g/configs/egl.cfg
-#USE_OPENGL_RENDERER := true
-
-# S2-COMMON-Settings:
-# BOARD_EGL_NEEDS_FNW := true
-# BOARD_EGL_NEEDS_HANDLE_VALUE=true
-# BOARD_EGL_SKIP_FIRST_DEQUEUE := true
-# BOARD_EGL_SYSTEMUI_PBSIZE_HACK := true
-# TARGET_REQUIRES_SYNCHRONOUS_SETSURFACE := true
-# COMMON_GLOBAL_CFLAGS += -DFORCE_SCREENSHOT_CPU_PATH -DWORKAROUND_BUG_10194508
-
-# Camera
-# BOARD_CAMERA_HAVE_ISO := true
-# COMMON_GLOBAL_CFLAGS += -DHAVE_ISO
-# COMMON_GLOBAL_CFLAGS += -DSAMSUNG_CAMERA_HARDWARE
-
-# Security
-#BOARD_USES_SECURE_SERVICES := true
 
 # Releasetools
 TARGET_RELEASETOOL_OTA_FROM_TARGET_SCRIPT := ./device/samsung/i9100g/releasetools/t1_ota_from_target_files
