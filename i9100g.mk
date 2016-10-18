@@ -100,6 +100,10 @@ PRODUCT_PACKAGES +=  libstlport
 PRODUCT_PACKAGES += \
     Snap
 
+# AdvancedDisplay
+PRODUCT_PACKAGES += \
+    AdvancedDisplay
+
 # Hardware tunables
 BOARD_HARDWARE_CLASS += \
 	$(OMAP4_NEXT_FOLDER)/cmhw
