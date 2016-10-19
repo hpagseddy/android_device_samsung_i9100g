@@ -19,6 +19,7 @@ $(call inherit-product, device/samsung/omap4-common/common.mk)
 
 LOCAL_PATH := device/samsung/i9100g
 OMAP4_NEXT_FOLDER := hardware/ti/omap4
+HARDWARE_SAMSUNG_FOLDER := hardware/samsung
 
 DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
 
@@ -106,6 +107,7 @@ PRODUCT_PACKAGES += \
 
 # Hardware tunables
 BOARD_HARDWARE_CLASS += \
+        $(HARDWARE_SAMSUNG_FOLDER)/cmhw \
 	$(OMAP4_NEXT_FOLDER)/cmhw
 
 # These are the hardware-specific features
