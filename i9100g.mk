@@ -80,7 +80,7 @@ PRODUCT_PACKAGES += \
     audio.primary.t1 \
     camera.omap4 \
     lights.t1 \
-    power.t1 \
+    power.orig.t1 \
     SamsungServiceMode \
     libsecril-client
 
