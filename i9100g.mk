@@ -55,7 +55,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/audio_effects.conf:system/etc/audio_effects.conf \
     $(LOCAL_PATH)/configs/audio_policy.conf:system/etc/audio_policy.conf
-    
+
 # GPS
 $(call inherit-product, device/common/gps/gps_us_supl.mk)
 
@@ -90,17 +90,13 @@ PRODUCT_PACKAGES += \
     fibmap.f2fs \
     f2fstat
 
-# Netmgr dependency on libstlport
+# build external libstlport for blobs
 PRODUCT_PACKAGES +=  libstlport
-
-# Camera
-# PRODUCT_PACKAGES += \
-#    Snap
 
 # Hardware tunables
 # BOARD_HARDWARE_CLASS += \
 #	$(OMAP4_NEXT_FOLDER)/cmhw
-    
+
 # These are the hardware-specific features
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.audio.low_latency.xml:system/etc/permissions/android.hardware.audio.low_latency.xml \
@@ -153,4 +149,3 @@ PRODUCT_TAGS += dalvik.gc.type-precise
 $(call inherit-product, frameworks/native/build/phone-hdpi-512-dalvik-heap.mk)
 $(call inherit-product-if-exists, hardware/broadcom/wlan/bcmdhd/firmware/bcm4330/device-bcm.mk)
 $(call inherit-product-if-exists, vendor/samsung/i9100g/i9100g-vendor.mk)
-
