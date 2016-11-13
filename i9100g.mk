@@ -74,14 +74,12 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/excluded-input-devices.xml:system/etc/excluded-input-devices.xml
 
-# Packages
+# Base Packages
 PRODUCT_PACKAGES += \
     audio.primary.t1 \
     camera.omap4 \
     lights.t1 \
-    power.t1 \
-    SamsungServiceMode \
-    libsecril-client
+    power.t1
 
 # F2FS filesystem
 PRODUCT_PACKAGES += \
@@ -94,8 +92,8 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES +=  libstlport
 
 # Hardware tunables
-# BOARD_HARDWARE_CLASS += \
-#	$(OMAP4_NEXT_FOLDER)/cmhw
+BOARD_HARDWARE_CLASS += \
+	$(OMAP4_NEXT_FOLDER)/cmhw
 
 # These are the hardware-specific features
 PRODUCT_COPY_FILES += \
