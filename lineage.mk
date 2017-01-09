@@ -17,7 +17,7 @@
 # Release name
 PRODUCT_RELEASE_NAME := GT-I9100G
 
-# Inherit some common CM stuff.
+# Inherit some common stuff
 $(call inherit-product, vendor/cm/config/common_full_phone.mk)
 
 # Inherit device configuration
@@ -25,7 +25,7 @@ $(call inherit-product, device/samsung/i9100g/full_i9100g.mk)
 
 ## Device identifier. This must come after all inclusions
 PRODUCT_DEVICE := i9100g
-PRODUCT_NAME := cm_i9100g
+PRODUCT_NAME := lineage_i9100g
 PRODUCT_BRAND := samsung
 PRODUCT_MODEL := GT-I9100G
 PRODUCT_MANUFACTURER := samsung

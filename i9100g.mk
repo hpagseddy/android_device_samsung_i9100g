@@ -75,17 +75,12 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/excluded-input-devices.xml:system/etc/excluded-input-devices.xml
 
-# Packages
+# Base Packages
 PRODUCT_PACKAGES += \
     audio.primary.t1 \
     camera.omap4 \
     lights.t1 \
-    power.orig.t1 \
-    SamsungServiceMode \
-    libsecril-client
-
-PRODUCT_PACKAGES += \
-    audio.r_submix.default
+    power.orig.t1
 
 # F2FS filesystem
 PRODUCT_PACKAGES += \
@@ -94,21 +89,21 @@ PRODUCT_PACKAGES += \
     fibmap.f2fs \
     f2fstat
 
-# Netmgr dependency on libstlport
-PRODUCT_PACKAGES +=  libstlport
+# libstlport for kk blobs
+PRODUCT_PACKAGES += \
+    libstlport
 
 # Camera
 PRODUCT_PACKAGES += \
     Snap
 
 # AdvancedDisplay
-PRODUCT_PACKAGES += \
-    AdvancedDisplay
+# PRODUCT_PACKAGES += \
+#     AdvancedDisplay
 
 # Hardware tunables
 BOARD_HARDWARE_CLASS += \
-        $(HARDWARE_SAMSUNG_FOLDER)/cmhw \
-	$(OMAP4_NEXT_FOLDER)/cmhw
+        $(LOCAL_PATH)/cmhw/
 
 # These are the hardware-specific features
 PRODUCT_COPY_FILES += \
