@@ -1,5 +1,5 @@
-#
-# Copyright (C) 2013 The CyanogenMod Project
+# Copyright (C) 2015 The Android Open Source Project
+# Written by Dmitry Grinberg
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,21 +12,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
 
-# Inherit common omap4 board config
--include hardware/ti/omap4/BoardConfigCommon.mk
+LOCAL_PATH := $(call my-dir)
 
-COMMON_PATH := device/samsung/i9100g
-BOARD_VENDOR := samsung
-TARGET_SPECIFIC_HEADER_PATH := $(COMMON_PATH)/include
+include $(CLEAR_VARS)
 
-# Dex Pre-opt
-# WITH_DEXPREOPT := true
+LOCAL_SHARED_LIBRARIES := liblog libhardware_legacy libgui libbinder libutils
+LOCAL_SRC_FILES := libgpsd-compat.c
+LOCAL_MODULE := libgpsd-compat
+LOCAL_MODULE_TAGS := optional
 
-# Use dlmalloc
-MALLOC_IMPL := dlmalloc
-TARGET_NEEDS_TEXT_RELOCATIONS := true
-
-# inherit from the proprietary version
--include vendor/samsung/i9100g/BoardConfigVendor.mk
+include $(BUILD_SHARED_LIBRARY)

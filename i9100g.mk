@@ -19,6 +19,7 @@ $(call inherit-product, device/samsung/i9100g/common.mk)
 
 LOCAL_PATH := device/samsung/i9100g
 OMAP4_NEXT_FOLDER := hardware/ti/omap4
+TARGET_BOARD_OMAP_CPU := 4430
 HARDWARE_SAMSUNG_FOLDER := hardware/samsung
 
 DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
@@ -31,8 +32,8 @@ PRODUCT_LOCALES += hdpi
 # Ramdisk
 PRODUCT_PACKAGES += \
     fstab.t1 \
-    init.t1.usb.rc \
     init.t1.rc \
+    init.t1.usb.rc \
     ueventd.t1.rc
 
 # Recovery Ramdisk TWRP
@@ -48,8 +49,7 @@ PRODUCT_PACKAGES += \
     wpa_supplicant.conf
 
 PRODUCT_PROPERTY_OVERRIDES += \
-    wifi.interface=wlan0 \
-    wifi.supplicant_scan_interval=30
+    wifi.interface=wlan0
 
 # Audio
 PRODUCT_COPY_FILES += \
@@ -59,9 +59,6 @@ PRODUCT_COPY_FILES += \
 
 # GPS
 $(call inherit-product, device/common/gps/gps_us_supl.mk)
-
-PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/configs/sirfgps.conf:system/etc/sirfgps.conf
 
 # Media profiles
 PRODUCT_COPY_FILES += \
@@ -89,17 +86,21 @@ PRODUCT_PACKAGES += \
     fibmap.f2fs \
     f2fstat
 
-# libstlport for kk blobs
+# GPS
 PRODUCT_PACKAGES += \
+    libgpsd-compat \
     libstlport
+
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/gps.xml:system/etc/gps.xml
 
 # Camera
 PRODUCT_PACKAGES += \
     Snap
 
-# AdvancedDisplay
-# PRODUCT_PACKAGES += \
-#     AdvancedDisplay
+# Charger
+PRODUCT_PACKAGES += \
+    charger_res_images
 
 # Hardware tunables
 BOARD_HARDWARE_CLASS += \
@@ -151,7 +152,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 #PRODUCT_PROPERTY_OVERRIDES += \
 #    dalvik.vm.dex2oat-flags=--no-watch-dog
 
-PRODUCT_TAGS += dalvik.gc.type-precise
+# PRODUCT_TAGS += dalvik.gc.type-precise
 
 $(call inherit-product, frameworks/native/build/phone-hdpi-512-dalvik-heap.mk)
 $(call inherit-product-if-exists, hardware/broadcom/wlan/bcmdhd/firmware/bcm4330/device-bcm.mk)

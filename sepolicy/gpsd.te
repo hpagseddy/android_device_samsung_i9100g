@@ -1,0 +1,7 @@
+# gpsd
+allow gpsd self:process { execmem };
+allow gpsd sysfs_wake_lock:file { read write };
+
+allow gpsd system_data_file:dir { write add_name };
+allow gpsd system_data_file:fifo_file { create setattr write open };
+

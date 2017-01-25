@@ -19,7 +19,7 @@
 TARGET_SPECIFIC_HEADER_PATH += device/samsung/i9100g/include
 
 TARGET_NO_BOOTLOADER := true
-TARGET_NO_RADIOIMAGE := true
+# TARGET_NO_RADIOIMAGE := true
 TARGET_NO_SEPARATE_RECOVERY := true
 BOARD_CANT_BUILD_RECOVERY_FROM_BOOT_PATCH := true
 
@@ -117,25 +117,21 @@ BOARD_SEPOLICY_DIRS += \
     device/samsung/i9100g/sepolicy
 
 # Recovery
-TARGET_RECOVERY_PIXEL_FORMAT := "BGRA_8888"
-BOARD_UMS_LUNFILE := "/sys/class/android_usb/f_mass_storage/lun0/file"
-BOARD_USES_MMCUTILS := true
-BOARD_HAS_NO_MISC_PARTITION := true
-BOARD_HAS_NO_SELECT_BUTTON := true
-BOARD_SUPPRESS_EMMC_WIPE := true
+# TARGET_RECOVERY_PIXEL_FORMAT := "BGRA_8888"
+RECOVERY_FSTAB_VERSION := 2
+# BOARD_UMS_LUNFILE := "/sys/class/android_usb/f_mass_storage/lun0/file"
+# BOARD_USES_MMCUTILS := true
+# BOARD_HAS_NO_MISC_PARTITION := true
+# BOARD_HAS_NO_SELECT_BUTTON := true
+# BOARD_SUPPRESS_EMMC_WIPE := true
 TARGET_RECOVERY_FSTAB := device/samsung/i9100g/rootdir/etc/fstab.t1
 TARGET_RECOVERY_DEVICE_DIRS += device/samsung/i9100g
-RECOVERY_FSTAB_VERSION := 2
 BOARD_HAS_DOWNLOAD_MODE := true
-BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/samsung/i9100g/recovery/root/recovery_keys.c
-BOARD_CUSTOM_BOOTIMG_MK := device/samsung/i9100g/shbootimg.mk
+# BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/samsung/i9100g/recovery/root/recovery_keys.c
 TARGET_RECOVERY_DENSITY := mdpi
 
-# RIL
-BOARD_VENDOR := samsung
-BOARD_PROVIDES_LIBRIL := true
-BOARD_MODEM_TYPE := xmm6260
-COMMON_GLOBAL_CFLAGS += -DDISABLE_ASHMEM_TRACKING
+# Custom Bootimage Make
+BOARD_CUSTOM_BOOTIMG_MK := device/samsung/i9100g/shbootimg.mk
 
 # assert
 TARGET_OTA_ASSERT_DEVICE := i9100g,GT-I9100G

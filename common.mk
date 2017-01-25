@@ -46,21 +46,18 @@ PRODUCT_PACKAGES += \
 # RIL
 PRODUCT_PACKAGES += \
     libsecril-client \
-    libxml2
-
-# Samsung symbols
-PRODUCT_PACKAGES += \
-    libsamsung_symbols \
-    ril-wrapper
+    libsecril-compat \
+    libsecril-shim \
+    libsecnativefeature
 
 # Misc S2
 PRODUCT_PACKAGES += \
     librs_jni \
+    libxml2 \
     com.android.future.usb.accessory \
     SamsungServiceMode
 
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.telephony.ril_class=SamsungOmap4RIL \
     ro.telephony.call_ring.multiple=false \
     ro.telephony.call_ring.delay=3000 \
     ro.bq.gpu_to_cpu_unsupported=1 \
