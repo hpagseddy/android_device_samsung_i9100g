@@ -16,6 +16,10 @@
         "target_path": "packages/apps/SamsungServiceMode"
     },
     {
+        "repository": "android_packages_resources_devicesettings",
+        "target_path": "packages/resources/devicesettings"
+    },
+    {
        "repository": "android_external_stlport",
        "target_path": "external/stlport"
     }
