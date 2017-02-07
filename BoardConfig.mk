@@ -158,9 +158,5 @@ TARGET_RELEASETOOLS_EXTENSIONS := device/samsung/i9100g
 # TW_HAS_NO_RECOVERY_PARTITION := true
 # TW_EXCLUDE_ENCRYPTED_BACKUPS := true
 
-# Releasetools
-# TARGET_RELEASETOOL_OTA_FROM_TARGET_SCRIPT := ./device/samsung/i9100g/releasetools/t1_ota_from_target_files
-TARGET_RELEASETOOL_IMG_FROM_TARGET_SCRIPT := ./device/samsung/i9100g/releasetools/t1_img_from_target_files
-
 # Use the non-open-source parts, if they're present
 -include vendor/samsung/i9100g/BoardConfigVendor.mk
