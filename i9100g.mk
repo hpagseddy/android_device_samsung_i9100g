@@ -15,7 +15,7 @@
 #
 
 # Include common makefile
-$(call inherit-product, device/samsung/omap4-common/common.mk)
+$(call inherit-product, device/samsung/i9100g/common.mk)
 
 LOCAL_PATH := device/samsung/i9100g
 OMAP4_NEXT_FOLDER := hardware/ti/omap4

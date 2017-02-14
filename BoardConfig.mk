@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
--include device/samsung/omap4-common/BoardConfigCommon.mk
+-include device/samsung/i9100g/BoardConfigCommon.mk
 
 TARGET_SPECIFIC_HEADER_PATH += device/samsung/i9100g/include
 
