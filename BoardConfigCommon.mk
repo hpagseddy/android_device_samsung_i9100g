@@ -30,15 +30,5 @@ TARGET_NEEDS_TEXT_RELOCATIONS := true
 TARGET_NEEDS_PLATFORM_TEXT_RELOCATIONS := true
 LIBART_IMG_BASE := 0x30000000
 
-# RIL
-BOARD_PROVIDES_LIBRIL := true
-BOARD_MODEM_TYPE := xmm6260
-BOARD_RIL_CLASS := ../../../device/samsung/i9100g/ril
-BOARD_GLOBAL_CFLAGS += -DDISABLE_ASHMEM_TRACKING
-
-# SELinux
-BOARD_SEPOLICY_DIRS += \
-    device/samsung/i9100g/sepolicy
-
 # inherit from the proprietary version
 -include vendor/samsung/omap4-common/BoardConfigVendor.mk

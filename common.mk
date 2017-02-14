@@ -47,8 +47,9 @@ PRODUCT_PACKAGES += \
 # RIL
 PRODUCT_PACKAGES += \
     libsecril-client \
-    libsamsung_symbols \
-    libsecril-shim
+    libsecril-compat \
+    libsecril-shim \
+    libsecnativefeature
 
 # Legacy GPS
 PRODUCT_PACKAGES += \
@@ -66,7 +67,6 @@ PRODUCT_PACKAGES += \
     SamsungServiceMode
 
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.telephony.ril_class=SamsungOmap4RIL \
     ro.telephony.call_ring.multiple=false \
     ro.telephony.call_ring.delay=3000 \
     ro.bq.gpu_to_cpu_unsupported=1 \
