@@ -34,7 +34,7 @@ BOARD_NAND_PAGE_SIZE := 4096
 BOARD_NAND_SPARE_SIZE := 128
 BOARD_KERNEL_PAGESIZE := 4096
 BOARD_KERNEL_BASE := 0x40000000
-#BOARD_KERNEL_CMDLINE :=
+BOARD_KERNEL_CMDLINE := androidboot.hardware=t1 androidboot.selinux=permissive selinux=0 zcache=lz4
 
 # External SGX Module
 SGX_MODULES:

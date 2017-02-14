@@ -29,4 +29,4 @@ MALLOC_IMPL := dlmalloc
 TARGET_NEEDS_TEXT_RELOCATIONS := true
 
 # inherit from the proprietary version
--include vendor/samsung/i9100g/BoardConfigVendor.mk
+-include vendor/samsung/omap4-common/BoardConfigVendor.mk
