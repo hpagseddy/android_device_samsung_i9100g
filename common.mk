@@ -14,6 +14,9 @@
 # limitations under the License.
 #
 
+#Set CPU
+TARGET_BOARD_OMAP_CPU := 4430
+
 # Include common omap4 makefile
 $(call inherit-product, hardware/ti/omap4/omap4.mk)
 

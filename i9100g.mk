@@ -129,8 +129,9 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.wifi.xml:system/etc/permissions/android.hardware.wifi.xml \
     frameworks/native/data/etc/android.software.sip.voip.xml:system/etc/permissions/android.software.sip.voip.xml \
     frameworks/native/data/etc/android.software.sip.xml:system/etc/permissions/android.software.sip.xml \
-    frameworks/native/data/etc/handheld_core_hardware.xml:system/etc/permissions/handheld_core_hardware.xml \
-    frameworks/native/data/etc/android.hardware.audio.low_latency.xml:system/etc/permissions/android.hardware.audio.low_latency.xml
+    frameworks/native/data/etc/handheld_core_hardware.xml:system/etc/permissions/handheld_core_hardware.xml
+
+#    frameworks/native/data/etc/android.hardware.audio.low_latency.xml:system/etc/permissions/android.hardware.audio.low_latency.xml
 
 # RIL
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -153,6 +154,8 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 # PRODUCT_TAGS += dalvik.gc.type-precise
 
+$(call inherit-product-if-exists, vendor/samsung/i9100g/i9100g-vendor.mk)
+$(call inherit-product-if-exists, vendor/ti/omap4/omap4-vendor.mk)
 $(call inherit-product, frameworks/native/build/phone-hdpi-512-dalvik-heap.mk)
 $(call inherit-product-if-exists, hardware/broadcom/wlan/bcmdhd/firmware/bcm4330/device-bcm.mk)
-$(call inherit-product-if-exists, vendor/samsung/i9100g/i9100g-vendor.mk)
+
