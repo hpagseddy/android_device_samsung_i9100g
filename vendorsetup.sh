@@ -1,0 +1,4 @@
+add_lunch_combo cm_i9100g-userdebug
+add_lunch_combo lineage_i9100g-userdebug
+add_lunch_combo cm_i9100g-eng
+add_lunch_combo lineage_i9100g-eng
