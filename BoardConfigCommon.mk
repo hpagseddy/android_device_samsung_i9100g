@@ -17,6 +17,9 @@
 # Inherit common omap4 board config
 -include hardware/ti/omap4/BoardConfigCommon.mk
 
+# Build SGX KM
+-include hardware/ti/omap4/pvr-km.mk
+
 COMMON_PATH := device/samsung/i9100g
 BOARD_VENDOR := samsung
 TARGET_SPECIFIC_HEADER_PATH := $(COMMON_PATH)/include
@@ -28,7 +31,7 @@ TARGET_SPECIFIC_HEADER_PATH := $(COMMON_PATH)/include
 MALLOC_SVELTE := true
 TARGET_NEEDS_TEXT_RELOCATIONS := true
 TARGET_NEEDS_PLATFORM_TEXT_RELOCATIONS := true
-LIBART_IMG_BASE := 0x30000000
+# LIBART_IMG_BASE := 0x30000000
 
 # inherit from the proprietary version
 -include vendor/samsung/omap4-common/BoardConfigVendor.mk
