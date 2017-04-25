@@ -35,7 +35,7 @@ BOARD_NAND_SPARE_SIZE := 128
 BOARD_KERNEL_PAGESIZE := 4096
 BOARD_KERNEL_BASE := 0x40000000
 BOARD_KERNEL_CMDLINE := androidboot.hardware=t1 androidboot.selinux=permissive selinux=0 console=ttySAC2,115200 consoleblank=0 zcache=lz4
-TARGET_KERNEL_CROSS_COMPILE_PREFIX := arm-linux-androideabi-
+# TARGET_KERNEL_CROSS_COMPILE_PREFIX := arm-linux-androideabi-
 TARGET_NEEDS_PLATFORM_TEXT_RELOCATIONS := true
 
 # Init
