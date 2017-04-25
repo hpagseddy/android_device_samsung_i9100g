@@ -79,8 +79,7 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     audio.primary.t1 \
     camera.omap4 \
-    lights.t1 \
-    power.orig.t1
+    lights.t1
 
 # F2FS filesystem
 PRODUCT_PACKAGES += \
