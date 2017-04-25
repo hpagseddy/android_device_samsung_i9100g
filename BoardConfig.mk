@@ -111,17 +111,17 @@ BOARD_SEPOLICY_DIRS += \
     device/samsung/i9100g/sepolicy
 
 # Recovery
-# TARGET_RECOVERY_PIXEL_FORMAT := "BGRA_8888"
-# BOARD_UMS_LUNFILE := "/sys/class/android_usb/f_mass_storage/lun0/file"
-# BOARD_USES_MMCUTILS := true
-# BOARD_HAS_NO_MISC_PARTITION := true
-# BOARD_HAS_NO_SELECT_BUTTON := true
-# BOARD_SUPPRESS_EMMC_WIPE := true
+TARGET_RECOVERY_PIXEL_FORMAT := "BGRA_8888"
+BOARD_UMS_LUNFILE := "/sys/class/android_usb/f_mass_storage/lun0/file"
+BOARD_USES_MMCUTILS := true
+BOARD_HAS_NO_MISC_PARTITION := true
+BOARD_HAS_NO_SELECT_BUTTON := true
+BOARD_SUPPRESS_EMMC_WIPE := true
 TARGET_RECOVERY_FSTAB := device/samsung/i9100g/rootdir/etc/fstab.t1
 TARGET_RECOVERY_DEVICE_DIRS += device/samsung/i9100g
 RECOVERY_FSTAB_VERSION := 2
 BOARD_HAS_DOWNLOAD_MODE := true
-# BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/samsung/i9100g/recovery/root/recovery_keys.c
+BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/samsung/i9100g/recovery/root/recovery_keys.c
 TARGET_RECOVERY_DENSITY := mdpi
 BOARD_RECOVERY_SWIPE := true
 BOARD_PROVIDES_BOOTLOADER_MESSAGE := true
