@@ -28,10 +28,7 @@
 /dev/umts_csd             0660   radio      system
 
 # hdcp
-/dev/hdcp		        0664	root		root
-
-# used by RIL and GPS
-/dev/ttyO0              0660   system     radio
+/dev/hdcp		  0664   root       root
 
 # FM Device
 /dev/fmradio            0660   system     audio
@@ -47,7 +44,7 @@
 /dev/cdma_rmnet5	    0660	radio	radio
 /dev/cdma_rmnet6	    0660	radio	radio
 /dev/lte_rmnet4		    0660	radio	radio
-/dev/ttyGS1			    0660	radio	radio
+/dev/ttyGS1		0660	radio	radio
 /dev/block/mmcblk0p4	0660	radio	radio
 /dev/modem_br           0660    radio   radio
 /dev/cdma_ramdump0      0660    radio   radio
@@ -58,3 +55,10 @@
 
 # For GCX
 /dev/gcioctl            0666   system		system
+
+# Bluetooth
+/dev/ttyO1              0660   bluetooth  system
+
+# GPS
+/dev/ttyO0              0660   system     system
+
