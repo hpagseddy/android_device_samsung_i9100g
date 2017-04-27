@@ -1,7 +1,7 @@
 #for DSSCOMP
 /dev/dsscomp              0666   system     system
 /dev/tiler                0666   system     system
-/dev/ion                  0777   media      graphics
+/dev/ion                  0666   system     system
 
 #for SYSLINK
 /dev/rpmsg-omx0           0660   system    drmrpc
@@ -14,7 +14,7 @@
 /dev/mpu                  0660   system     system
 /dev/mpuirq               0660   system     system
 /dev/timerirq             0660   system     system
-/dev/akm8975		      0660	 system	    system
+/dev/akm8975		  0660	 system	    system
 
 #for HSPA RIL
 /dev/umts_boot0           0660   radio      radio
@@ -54,11 +54,10 @@
 /dev/pvrsrvkm           0666   system     system
 
 # For GCX
-/dev/gcioctl            0666   system		system
+/dev/gcioctl            0666   system	  system
 
 # Bluetooth
-/dev/ttyO1              0660   bluetooth  system
+/dev/ttyO1              0660   bluetooth  net_bt_stack
 
 # GPS
 /dev/ttyO0              0660   system     system
-
