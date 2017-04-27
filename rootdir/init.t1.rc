@@ -2,36 +2,30 @@ import init.t1.usb.rc
 import init.omap4.rc
 import init.gps.rc
 
+on early-init
+    mount debugfs debugfs /sys/kernel/debug
+    restorecon_recursive /sys/kernel/debug
+
 on init
-    mkdir /efs 0771 radio system
-    mkdir /preload 0771 system system
-    mkdir /mnt 0775 root system
-    mkdir /mnt/.lfs 0755 root root
-    
     symlink /sdcard /storage/sdcard
 
     # KSM
     write /sys/kernel/mm/ksm/pages_to_scan 100
     write /sys/kernel/mm/ksm/sleep_millisecs 500
     write /sys/kernel/mm/ksm/run 1
-
-    # change permissions for ION driver
-    chmod 0777 /dev/ion
     
     # PVR
     chmod 0666 /dev/pvrsrvkm
     
 on fs
     mkdir /efs 0775 radio system
+    mkdir /preload 0771 system system
+    mkdir /mnt 0775 root system
+    mkdir /mnt/.lfs 0755 root root
 
     mount_all /fstab.t1
     swapon_all /fstab.t1
 
-    # We chown/chmod /efs because mount is run as root + defaults
-    chown radio system /efs
-    chmod 0775 /efs
-
-    # Restorecon
     restorecon_recursive /efs
 
     # read only 1 page at a time
@@ -187,7 +181,7 @@ on post-fs-data
     chmod 0660 /sys/class/sec/sec_touchkey/timeout
     restorecon /sys/class/sec/sec_touchkey/timeout
 
-# Permissions for dvfs lock
+    # Permissions for dvfs lock
     chown radio system /sys/power/cpufreq_min_limit
     chown radio system /sys/power/cpufreq_max_limit
     chown radio system /sys/power/cpufreq_table
@@ -195,11 +189,11 @@ on post-fs-data
     chmod 0664 /sys/power/cpufreq_max_limit
     chmod 0664 /sys/power/cpufreq_table
 
-# Change permission for input devices & GPIO key
+    # Change permission for input devices & GPIO key
     chown radio system /sys/class/sec/sec_key/sec_key_pressed
     chown radio system /sys/class/sec/sec_power_key/sec_power_key_pressed
 
-# Change permission for TSP
+    # Change permission for TSP
     chown radio system /sys/class/sec/tsp_noise_test/set_threshold
     chown radio system /sys/class/sec/tsp_noise_test/set_delta4
     chown radio system /sys/class/sec/tsp_noise_test/set_refer4
@@ -218,7 +212,7 @@ on post-fs-data
     chown radio system /sys/class/sec/sec_touchscreen/tsp_threshold
     restorecon /sys/class/sec/sec_touchscreen/tsp_threshold
 
-# Permissions for bluetooth
+    # Permissions for bluetooth
     setprop ro.bt.bdaddr_path "/efs/bluetooth/bt_addr"
     chown bluetooth bluetooth ro.bt.bdaddr_path
     chown bluetooth bluetooth /dev/ttyO1
@@ -227,7 +221,7 @@ on post-fs-data
     chown bluetooth bluetooth /sys/class/rfkill/rfkill0/state
     chown bluetooth bluetooth /sys/class/rfkill/rfkill0/type
 
-# changer permission for overlay manager
+    # changer permission for overlay manager
     chown system system /sys/devices/platform/omapdss/overlay2/manager
     chown system system /sys/devices/platform/omapdss/overlay2/enabled
     chown system system /sys/devices/platform/omapdss/overlay1/manager
@@ -235,7 +229,7 @@ on post-fs-data
     chown system system /sys/devices/platform/omapdss/overlay0/manager
     chown system system /sys/devices/platform/omapdss/overlay0/enabled
 
-# Vibrator
+    # Vibrator
     chown root shell /dev/tspdrv
     chmod 0660 /dev/tspdrv
 
@@ -251,7 +245,7 @@ on post-fs-data
     chown system system /sys/class/timed_output/vibrator/pwm_threshold
     chmod 0660 /sys/class/timed_output/vibrator/pwm_threshold
 
-# Change permission for LCD
+    # Change permission for LCD
     chown system radio /sys/class/lcd/panel/lcd_type
     chown system media_rw /sys/class/lcd/panel/gamma_mode
     restorecon /sys/class/lcd/panel/gamma_mode
@@ -259,8 +253,8 @@ on post-fs-data
     chown system system /sys/class/lcd/panel/power_reduce
     restorecon /sys/class/lcd/panel/power_reduce
 
-#UART
-# Permissions for uart_sel and usb_sel
+    #UART
+    # Permissions for uart_sel and usb_sel
     chown system radio /sys/devices/t1_otg/uart_sel
     chown system radio /sys/devices/t1_otg/usb_sel
     chown system radio /sys/devices/t1_otg/usb_sel
@@ -269,86 +263,84 @@ on post-fs-data
     chmod 0660 /sys/devices/t1_otg/usb_sel
     chown system radio /mnt/.lfs/sw_sel
 
-# Permissions for uart_sel and usb_sel
+    # Permissions for uart_sel and usb_sel
     chown system radio /sys/class/sec/switch/audio_path
     chown radio system /sys/bus/i2c/drivers/fsa9480/4-0025/switch
     chmod 0660 /sys/bus/i2c/drivers/fsa9480/4-0025/switch
 
-# Permissions for OTG Test
+    # Permissions for OTG Test
     chown system radio /sys/class/host_notify/usb_otg/booster
     chmod 0664 /sys/class/host_notify/usb_otg/booster
 
-# Permission for radio
+    # Permission for radio
     chown system radio /sys/devices/virtual/misc/multipdp/waketime
 
-# for datarouter
+    # for datarouter
     chown system system /dev/dun
     chown system system /dev/ttyGS0
     chown system system /dev/ttyGS1
     chown system system /dev/ttyGS2
     chown system system /dev/ttyGS3
 
-    mount debugfs /sys/kernel/debug /sys/kernel/debug
-
     # Device Encryption by Security R&D Group. 
     setprop ro.crypto.keyfile.userdata /efs/metadata
 
-# Lower maximum frequency when screen is off
+    # Lower maximum frequency when screen is off
     write /sys/devices/system/cpu/cpu0/cpufreq/screen_off_max_freq 600000
 
-# cpufreq interactive governor: timer 20ms, min sample 20ms, hispeed 800MHz
+    # cpufreq interactive governor: timer 20ms, min sample 20ms, hispeed 800MHz
     write /sys/devices/system/cpu/cpufreq/interactive/timer_rate 20000
     write /sys/devices/system/cpu/cpufreq/interactive/min_sample_time 20000
     write /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq 800000
 
-# autosuspend root hubs immediatly after attached devices
+    # autosuspend root hubs immediatly after attached devices
     write /sys/bus/usb/devices/usb1/power/autosuspend_delay_ms 0
     write /sys/bus/usb/devices/usb2/power/autosuspend_delay_ms 0
 
-# Temerature Sensor Permission
+    # Temerature Sensor Permission
     chown system system /sys/devices/platform/omap/omap_temp_sensor.0
     chmod 0660 /sys/devices/platform/omap/omap_temp_sensor.0
 
-# leds
+    # leds
     chown system system /dev/an30259a_leds
 
-# Change permission for gyro sensor
+    # Change permission for gyro sensor
     chown radio system /sys/class/sensors/gyro_sensor/power_on
     chown radio system /sys/class/sensors/gyro_sensor/temperature
     chown radio system /sys/class/sensors/gyro_sensor/selftest
 
-# Change permission for proximity rev03
+    # Change permission for proximity rev03
     chown system input /sys/class/input/input6/enable
     chown system input /sys/class/input/input6/poll_delay
     chown system radio /sys/class/sensors/proximity_sensor/state
     chown system radio /sys/class/sensors/proximity_sensor/adc
     chown system radio /sys/class/sensors/proximity_sensor/prox_avg
 
-# Change permission for light sensor rev00
+    # Change permission for light sensor rev00
     chown system input /sys/class/input/input7/enable
     chown system input /sys/class/input/input7/poll_delay
     chown system radio /sys/class/sensors/light_sensor/lux
     chown system radio /sys/class/sensors/light_sensor/adc
 
-# Change permission for accelerometer
+    # Change permission for accelerometer
     chown system input /sys/class/input/input1/enable
     chown system input /sys/class/input/input1/poll_delay
     chown system radio /sys/class/sensors/accelerometer_sensor/raw_data
     chown system radio /sys/class/sensors/accelerometer_sensor/calibration
     restorecon /sys/class/sensors/accelerometer_sensor/calibration
 
-# for magsensor
+    # for magsensor
     chown system system /dev/ak8975
     chown system radio /sys/class/sec/sec_ak8975/ak8975_asa
     chown system radio /sys/class/sec/sec_ak8975/ak8975_chk_cntl
     chown system radio /sys/class/sec/sec_ak8975/ak8975_chk_registers
     chown system radio /sys/class/sec/sec_ak8975/ak8975_selftest
 
-# Compass sensor
+    # Compass sensor
     chown system input /sys/class/input/input8/enable
     chown system input /sys/class/input/input8/poll_delay
 
-# GPS (i9100)
+    # GPS (i9100)
     chown root system /dev/ttyO0
     chmod 0660 /dev/ttyO0
     chown root system /sys/class/sec/gps/GPS_PWR_EN/value
@@ -361,20 +353,18 @@ on post-fs-data
     setprop vold.post_fs_data_done 1
 
 on boot
-    mount debugfs /sys/kernel/debug /sys/kernel/debug
-
     #panorama directory creation
     mkdir /data/pxtmpdir 0775
     chown system system /data/pxtmpdir
     chmod 0775 /data/pxtmpdir
 
-# for wifi
+    # for wifi
     mkdir /efs/wifi 0775 system radio
 
-# for hdcp, amwbr
+    # for hdcp, amwbr
     mkdir /data/misc/radio 0775 radio system
 
-# ril control auto-suspend
+    # ril control auto-suspend
     chmod 0660 /sys/bus/usb/devices/usb1/power/control
     chown radio radio /sys/bus/usb/devices/usb1/power/control
 
