@@ -125,6 +125,7 @@ BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/samsung/i9100g/recovery/root/re
 TARGET_RECOVERY_DENSITY := mdpi
 BOARD_RECOVERY_SWIPE := true
 BOARD_PROVIDES_BOOTLOADER_MESSAGE := true
+LZMA_RAMDISK_TARGETS := recovery
 
 # Custom Bootimage make
 BOARD_CUSTOM_BOOTIMG := true
