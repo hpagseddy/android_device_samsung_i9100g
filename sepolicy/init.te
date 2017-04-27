@@ -1,4 +1,5 @@
 # init
+allow init kernel:system module_request;
 allow init self:capability sys_module;
 
 # chmod/chown rfkill device
@@ -8,7 +9,9 @@ allow init sysfs_bluetooth_writable:file getattr;
 allow init tmpfs:lnk_file create;
 
 # For mounting debugfs
-allow init debugfs:dir mounton;
+allow init debugfs_trace_marker:file getattr;
+
+allow init block_device:lnk_file { create_file_perms relabelfrom };
 
 # Requied to load shim libs
 allow init rild:process noatsecure;

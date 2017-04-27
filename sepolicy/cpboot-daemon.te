@@ -1,4 +1,7 @@
-type cpboot-daemon, domain;
+type cpboot-daemon, domain, domain_deprecated;
+type cpboot-daemon_exec, exec_type, file_type;
+
+init_daemon_domain(cpboot-daemon);
 
 allow cpboot-daemon cbd_device:chr_file create_file_perms;
 allow cpboot-daemon cgroup:dir { create add_name };
@@ -14,5 +17,3 @@ unix_socket_connect(cpboot-daemon, property, init)
 
 allow cpboot-daemon radio_prop:property_service set;
 
-# neverallow failures - FIX ME if needed
-# allow cpboot-daemon self:capability mknod;
