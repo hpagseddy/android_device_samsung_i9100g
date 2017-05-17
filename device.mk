@@ -36,8 +36,8 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/rootdir/ueventd.t1.rc:root/ueventd.t1.rc
 
 # Recovery Ramdisk TWRP
-#PRODUCT_PACKAGES += \
-#    twrp.fstab
+# PRODUCT_COPY_FILES += \
+#     $(LOCAL_PATH)/recovery/root/etc/twrp.fstab:recovery/root/etc/twrp.fstab
 
 # Wifi
 PRODUCT_PACKAGES += \

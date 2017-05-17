@@ -142,6 +142,18 @@ TARGET_RELEASETOOLS_EXTENSIONS := device/samsung/i9100g
 # TW_THEME := portrait_mdpi
 # TW_HAS_NO_RECOVERY_PARTITION := true
 # TW_EXCLUDE_ENCRYPTED_BACKUPS := true
+# TARGET_RECOVERY_PIXEL_FORMAT := "BGRA_8888"
+
+# TWRP 3 additional settings
+# RECOVERY_VARIANT := twrp
+# TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery/root/etc/twrp.fstab
+# TW_BRIGHTNESS_PATH := /sys/class/backlight/panel/brightness
+# TW_DEFAULT_BRIGHTNESS := 65
+# TW_MAX_BRIGHTNESS := 255
+# TW_EXCLUDE_SUPERSU := true
+# TW_FLASH_FROM_STORAGE := true
+# TW_EXTERNAL_STORAGE_PATH := "/sdcard"
+# TW_EXTERNAL_STORAGE_MOUNT_POINT := "sdcard"
 
 # Use the non-open-source parts, if they're present
 -include vendor/samsung/i9100g/BoardConfigVendor.mk
