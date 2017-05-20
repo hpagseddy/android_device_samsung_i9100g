@@ -34,7 +34,7 @@ BOARD_NAND_PAGE_SIZE := 4096
 BOARD_NAND_SPARE_SIZE := 128
 BOARD_KERNEL_PAGESIZE := 4096
 BOARD_KERNEL_BASE := 0x40000000
-BOARD_KERNEL_CMDLINE := androidboot.hardware=t1 androidboot.selinux=permissive selinux=0 console=ttySAC2,115200 consoleblank=0 zcache=lz4
+# BOARD_KERNEL_CMDLINE := androidboot.hardware=t1 androidboot.selinux=permissive selinux=0 console=ttySAC2,115200 consoleblank=0 zcache=lz4
 # TARGET_KERNEL_CROSS_COMPILE_PREFIX := arm-linux-androideabi-
 TARGET_NEEDS_PLATFORM_TEXT_RELOCATIONS := true
 
@@ -125,7 +125,6 @@ BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/samsung/i9100g/recovery/root/re
 TARGET_RECOVERY_DENSITY := mdpi
 BOARD_RECOVERY_SWIPE := true
 BOARD_PROVIDES_BOOTLOADER_MESSAGE := true
-LZMA_RAMDISK_TARGETS := recovery
 
 # Custom Bootimage make
 BOARD_CUSTOM_BOOTIMG := true
