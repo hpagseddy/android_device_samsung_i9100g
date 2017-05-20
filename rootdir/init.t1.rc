@@ -8,6 +8,8 @@ on early-init
 on init
     symlink /sdcard /storage/sdcard
 
+    chmod 0644 /proc/cmdline
+
     # KSM
     write /sys/kernel/mm/ksm/pages_to_scan 100
     write /sys/kernel/mm/ksm/sleep_millisecs 500
