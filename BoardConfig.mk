@@ -14,12 +14,12 @@
 # limitations under the License.
 #
 
--include device/samsung/i9100g/BoardConfigCommon.mk
+-include device/samsung/omap4-common/BoardConfigCommon.mk
 
 TARGET_SPECIFIC_HEADER_PATH += device/samsung/i9100g/include
 
 TARGET_NO_BOOTLOADER := true
-# TARGET_NO_RADIOIMAGE := true
+TARGET_NO_RADIOIMAGE := true
 TARGET_NO_SEPARATE_RECOVERY := true
 BOARD_CANT_BUILD_RECOVERY_FROM_BOOT_PATCH := true
 
@@ -29,12 +29,12 @@ TARGET_BOARD_INFO_FILE := device/samsung/i9100g/board-info.txt
 
 # Inline kernel building
 TARGET_KERNEL_SOURCE := kernel/samsung/t1
-TARGET_KERNEL_CONFIG := lineageos_i9100g_defconfig
+TARGET_KERNEL_CONFIG := lineage_i9100g_defconfig
 BOARD_NAND_PAGE_SIZE := 4096
 BOARD_NAND_SPARE_SIZE := 128
 BOARD_KERNEL_PAGESIZE := 4096
 BOARD_KERNEL_BASE := 0x40000000
-BOARD_KERNEL_CMDLINE := androidboot.hardware=t1 androidboot.selinux=permissive selinux=0 zcache=lz4
+BOARD_KERNEL_CMDLINE := androidboot.hardware=t1 androidboot.selinux=permissive selinux=0
 
 # Init
 TARGET_PROVIDES_INIT := true
@@ -73,6 +73,7 @@ WIFI_DRIVER_FW_PATH_AP           := "/system/etc/wifi/bcmdhd_apsta.bin"
 WIFI_DRIVER_FW_PATH_P2P          := "/system/etc/wifi/bcmdhd_p2p.bin"
 WIFI_DRIVER_MODULE_NAME          := "dhd"
 WIFI_DRIVER_MODULE_ARG           := "firmware_path=/system/etc/wifi/bcmdhd_sta.bin nvram_path=/system/etc/wifi/nvram_net.txt"
+WIFI_DRIVER_MODULE_AP_ARG        := "firmware_path=/system/etc/wifi/bcmdhd_apsta.bin nvram_path=/system/etc/wifi/nvram_net.txt"
 WIFI_BAND                        := 802_11_ABG
 BOARD_HAVE_SAMSUNG_WIFI          := true
 BOARD_NO_APSME_ATTR              := true
@@ -87,10 +88,7 @@ BOARD_USE_TI_DUCATI_H264_PROFILE := true
 BOARD_HAVE_SAMSUNG_BLUETOOTH := true
 
 # Audio
-BOARD_USES_GENERIC_AUDIO := false
-BOARD_USE_TINYALSA_AUDIO := true
-# USE_CUSTOM_AUDIO_POLICY := 1
-# TARGET_TINY_ALSA_IGNORE_SILENCE_SIZE := true
+USE_CUSTOM_AUDIO_POLICY := true
 
 # Charger
 BOARD_CHARGER_SHOW_PERCENTAGE := true
@@ -106,21 +104,25 @@ BOARD_SEPOLICY_DIRS += \
     device/samsung/i9100g/sepolicy
 
 # Recovery
-# TARGET_RECOVERY_PIXEL_FORMAT := "BGRA_8888"
-RECOVERY_FSTAB_VERSION := 2
-# BOARD_UMS_LUNFILE := "/sys/class/android_usb/f_mass_storage/lun0/file"
-# BOARD_USES_MMCUTILS := true
-# BOARD_HAS_NO_MISC_PARTITION := true
-# BOARD_HAS_NO_SELECT_BUTTON := true
-# BOARD_SUPPRESS_EMMC_WIPE := true
-TARGET_RECOVERY_FSTAB := device/samsung/i9100g/rootdir/fstab.t1
+TARGET_RECOVERY_PIXEL_FORMAT := "BGRA_8888"
+BOARD_UMS_LUNFILE := "/sys/class/android_usb/f_mass_storage/lun0/file"
+BOARD_USES_MMCUTILS := true
+BOARD_HAS_NO_MISC_PARTITION := true
+BOARD_HAS_NO_SELECT_BUTTON := true
+BOARD_SUPPRESS_EMMC_WIPE := true
+TARGET_RECOVERY_FSTAB := device/samsung/i9100g/rootdir/etc/fstab.t1
 TARGET_RECOVERY_DEVICE_DIRS += device/samsung/i9100g
+RECOVERY_FSTAB_VERSION := 2
 BOARD_HAS_DOWNLOAD_MODE := true
-# BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/samsung/i9100g/recovery/root/recovery_keys.c
+BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/samsung/i9100g/recovery/root/recovery_keys.c
+BOARD_CUSTOM_BOOTIMG_MK := device/samsung/i9100g/shbootimg.mk
 TARGET_RECOVERY_DENSITY := mdpi
 
-# Custom Bootimage Make
-BOARD_CUSTOM_BOOTIMG_MK := device/samsung/i9100g/shbootimg.mk
+# RIL
+BOARD_VENDOR := samsung
+BOARD_PROVIDES_LIBRIL := true
+BOARD_MODEM_TYPE := xmm6260
+COMMON_GLOBAL_CFLAGS += -DDISABLE_ASHMEM_TRACKING
 
 # assert
 TARGET_OTA_ASSERT_DEVICE := i9100g,GT-I9100G
