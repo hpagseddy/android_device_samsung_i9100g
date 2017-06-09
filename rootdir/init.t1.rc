@@ -271,6 +271,7 @@ on post-fs-data
     chown system radio /sys/class/lcd/panel/lcd_power
     chown system system /sys/class/lcd/panel/power_reduce
     restorecon /sys/class/lcd/panel/power_reduce
+    chown system system /sys/class/backlight/panel/auto_brightness
 
 #UART
 # Permissions for uart_sel and usb_sel
