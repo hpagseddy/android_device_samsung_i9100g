@@ -1,5 +1,5 @@
-import init.t1.usb.rc
 import init.omap4.rc
+import init.t1.usb.rc
 
 on init
     export LD_SHIM_LIBS /system/lib/libsec-ril.so|libsamsung_symbols.so
@@ -21,7 +21,7 @@ on init
     chmod 0777 /dev/ion
     
     # PVR
-    chmod 0666 /dev/pvrsrvkm
+    chmod 0777 /dev/pvrsrvkm
 
     # Preload libjhead for camera
     #export LD_PRELOAD /system/lib/libjhead.so
@@ -106,9 +106,6 @@ on post-fs-data
 
     mkdir /data/radio 0775 radio radio
     mkdir /data/radio/log 0775 radio radio
-
-    setprop ro.build.product GT-I9100G
-    setprop ro.product.device GT-I9100G
 
     # camera calibration
     mkdir /data/misc/camera 0770 media media
@@ -521,13 +518,6 @@ service cpboot-daemon /sbin/cbd -d -p 8
 
 on property:init.svc.pvrsrvinit=stopped
     start cpboot-daemon
-
-# TVout
-service TvoutService_C /system/bin/bintvoutservice
-    class main
-    user system
-    group system
-    seclabel u:r:tvout:s0
 
 # LPM
 on property:ro.bootmode=charger

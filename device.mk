@@ -29,12 +29,12 @@ PRODUCT_AAPT_CONFIG := normal
 PRODUCT_AAPT_PREF_CONFIG := hdpi
 PRODUCT_LOCALES += hdpi
 
-# Ramdisk
-PRODUCT_PACKAGES += \
-    fstab.t1 \
-    init.t1.usb.rc \
-    init.t1.rc \
-    ueventd.t1.rc
+# Init files & fstab
+PRODUCT_COPY_FILES += \
+   $(LOCAL_PATH)/rootdir/init.t1.rc:root/init.t1.rc \
+   $(LOCAL_PATH)/rootdir/init.t1.usb.rc:root/init.t1.usb.rc \
+   $(LOCAL_PATH)/rootdir/ueventd.t1.rc:root/ueventd.t1.rc \
+   $(LOCAL_PATH)/rootdir/fstab.t1:root/fstab.t1
 
 # Recovery Ramdisk TWRP
 #PRODUCT_PACKAGES += \
@@ -101,10 +101,6 @@ PRODUCT_PACKAGES +=  libstlport
 PRODUCT_PACKAGES += \
     Snap
 
-# AdvancedDisplay
-PRODUCT_PACKAGES += \
-    AdvancedDisplay
-
 # Hardware tunables
 BOARD_HARDWARE_CLASS += \
         $(HARDWARE_SAMSUNG_FOLDER)/cmhw \
@@ -143,17 +139,11 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.ril.gprsclass=10
 
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.opengles.version=131072
-
-# SGX540 is slower with the scissor optimization enabled
-PRODUCT_PROPERTY_OVERRIDES += \
+    ro.opengles.version=131072 \
     ro.hwui.disable_scissor_opt=true
 
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.sf.lcd_density=240
-
-#PRODUCT_PROPERTY_OVERRIDES += \
-#    dalvik.vm.dex2oat-flags=--no-watch-dog
 
 PRODUCT_TAGS += dalvik.gc.type-precise
 
