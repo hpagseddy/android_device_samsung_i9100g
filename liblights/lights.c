@@ -142,7 +142,7 @@ static int set_light_buttons(struct light_device_t* dev __unused,
 
     pthread_mutex_lock(&g_lock);
 
-    err = set_cur_button_brightness(on ? 1 : 0);
+    err = set_cur_button_brightness(on ? 1 : 2);
 
     pthread_mutex_unlock(&g_lock);
 
