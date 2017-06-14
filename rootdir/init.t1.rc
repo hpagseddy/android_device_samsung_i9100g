@@ -22,16 +22,10 @@ on init
     
     # PVR
     chmod 0777 /dev/pvrsrvkm
-
-    # Preload libjhead for camera
-    #export LD_PRELOAD /system/lib/libjhead.so
-    #export LD_PRELOAD "/system/lib/libsamsung_symbols.so"    
     
 on fs
     mount_all /fstab.t1
     swapon_all /fstab.t1
-
-#    mkdir /efs
 
     # We chown/chmod /efs because mount is run as root + defaults
     chown radio system /efs
@@ -79,12 +73,6 @@ on post-fs-data
     chmod 0664  /sys/power/cpufreq_min_limit
     chmod 0664  /sys/power/cpufreq_max_limit
     chmod 0664  /sys/power/cpufreq_table
-    
-#    # misc old...
-#    mkdir /efs 0771 radio system
-#    mkdir /preload 0771 system system
-#    mkdir /mnt 0775 root system
-#    mkdir /mnt/.lfs 0755 root root
   
     # change permissions for wifi
     chmod 0770 /data/misc/wifi 
@@ -135,7 +123,6 @@ on post-fs-data
     chown system radio /sys/class/power_supply/battery/fg_reset_soc
     chown system radio /sys/class/power_supply/battery/batt_vol
     chown system radio /sys/class/power_supply/battery/batt_charging_source
-
     chown system radio /sys/class/power_supply/battery/batt_lpm_state
     chown system radio /sys/class/power_supply/battery/fg_psoc
     chown system radio /sys/class/power_supply/battery/system_rev
@@ -362,12 +349,6 @@ on post-fs-data
     chown system input /sys/class/input/input8/enable
     chown system input /sys/class/input/input8/poll_delay
 
-# GPS (i9100g orig)
-#    chown system radio /sys/class/sec/gps/GPS_PWR_EN/value
-#    chmod 0660 /sys/class/sec/gps/GPS_PWR_EN/value
-#    chown system radio /sys/class/sec/gps/GPS_nRST/value
-#    chmod 0660 /sys/class/sec/gps/GPS_nRST/value
-
 # GPS (i9100)
     chown root system /dev/ttyO0
     chmod 0660 /dev/ttyO0
@@ -402,21 +383,6 @@ on property:persist.sys.t1.off_mode=*
 on property:ril.modem.lte.powercontrol=*
     write /sys/bus/usb/devices/1-1/power/control $ril.modem.lte.powercontrol
 
-# initialize the SGX driver
-#service pvrsrvinit /system/bin/pvrsrvinit
-#    class core
-#    user root
-#    group root
-#    oneshot
-#    disabled
-    
-#service pvrsrvctl /system/vendor/bin/pvrsrvctl_SGX540_120 --start --no-module
-#    class core
-#    user root
-#    group root
-#    seclabel u:r:pvrsrvinit:s0
-#    oneshot
-
 # SMC Service
 service tf_daemon /system/bin/tf_daemon \
     -d -c /system/bin/smc.ini
@@ -433,19 +399,6 @@ service smc_pa /system/bin/smc_pa_ctrl \
     user root
     group root
     oneshot
-
-# FUSE sdcard daemon for rich permissions (runs as media_rw)
-#service fuse_sdcard0 /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/sdcard0 /storage/sdcard0
-#    class late_start
-#    disabled
-
-#service fuse_sdcard1 /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/sdcard1 /storage/sdcard1
-#    class late_start
-#    disabled
-
-#service fuse_usbdisk0 /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/usbdisk0 /storage/usbdisk0
-#    class late_start
-#    disabled
 
 service p2p_supplicant /system/bin/wpa_supplicant \
     -iwlan0 -Dnl80211 -iwlan0 -c/data/misc/wifi/wpa_supplicant.conf \
