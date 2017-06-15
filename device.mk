@@ -81,11 +81,7 @@ PRODUCT_PACKAGES += \
     audio.primary.t1 \
     camera.omap4 \
     lights.t1 \
-    SamsungServiceMode \
-    libsecril-client
-
-PRODUCT_PACKAGES += \
-    audio.r_submix.default
+    SamsungServiceMode
 
 # F2FS filesystem
 PRODUCT_PACKAGES += \
@@ -94,8 +90,9 @@ PRODUCT_PACKAGES += \
     fibmap.f2fs \
     f2fstat
 
-# Netmgr dependency on libstlport
-PRODUCT_PACKAGES +=  libstlport
+# libstlport
+PRODUCT_PACKAGES += \
+   libstlport
 
 # Camera
 PRODUCT_PACKAGES += \

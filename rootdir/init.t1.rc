@@ -2,7 +2,9 @@ import init.omap4.rc
 import init.t1.usb.rc
 
 on init
-    mkdir /efs 0775 radio system
+    export LD_SHIM_LIBS /system/lib/libsec-ril.so|libsamsung_symbols.so
+
+    mkdir /efs 0771 radio system
     mkdir /preload 0771 system system
     mkdir /mnt 0775 root system
     mkdir /mnt/.lfs 0755 root root
@@ -364,7 +366,7 @@ on post-fs-data
     chmod 0664 /sys/class/sec/gps/GPS_nRST/value
     mkdir /data/gps 771 system system
     chown system system /data/gps
-    
+
     setprop vold.post_fs_data_done 1
 
 on boot
