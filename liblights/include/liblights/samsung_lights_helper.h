@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 The Android Open Source Project
+ * Copyright (C) 2016 The CyanogenMod Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,19 @@
  * limitations under the License.
  */
 
-#ifndef _BDROID_BUILDCFG_H
-#define _BDROID_BUILDCFG_H
+#ifndef SAMSUNG_LIGHTS_HELPER_H
+#define SAMSUNG_LIGHTS_HELPER_H
 
-#define BTM_DEF_LOCAL_NAME   "GT-I9100G"
+#include <samsung_lights.h>
 
-#define BLE_INCLUDED TRUE
-#define BTA_GATT_INCLUDED TRUE
-#define SMP_INCLUDED TRUE
+/*
+ * Interfaces for other modules accessing lights HAL data.
+ * For documentation, see lights_helper.c
+ */
+extern int set_cur_button_brightness(const int brightness);
+extern int get_cur_panel_brightness();
+extern int get_max_panel_brightness();
+extern int set_cur_panel_brightness(const int brightness);
+extern int set_max_panel_brightness(const int brightness);
 
-#endif
+#endif // SAMSUNG_LIGHTS_HELPER_H

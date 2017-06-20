@@ -15,10 +15,11 @@
 #
 
 # Include common makefile
-$(call inherit-product, device/samsung/i9100g/common.mk)
+$(call inherit-product, device/samsung/omap4-common/common.mk)
 
 LOCAL_PATH := device/samsung/i9100g
 OMAP4_NEXT_FOLDER := hardware/ti/omap4
+TARGET_BOARD_OMAP_CPU := 4430
 HARDWARE_SAMSUNG_FOLDER := hardware/samsung
 
 DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
@@ -28,21 +29,22 @@ PRODUCT_AAPT_CONFIG := normal
 PRODUCT_AAPT_PREF_CONFIG := hdpi
 PRODUCT_LOCALES += hdpi
 
-# Ramdisk
+# Init files & fstab
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/rootdir/fstab.t1:root/fstab.t1 \
-    $(LOCAL_PATH)/rootdir/init.t1.rc:root/init.t1.rc \
-    $(LOCAL_PATH)/rootdir/init.t1.usb.rc:root/init.t1.usb.rc \
-    $(LOCAL_PATH)/rootdir/ueventd.t1.rc:root/ueventd.t1.rc
+   $(LOCAL_PATH)/rootdir/init.t1.rc:root/init.t1.rc \
+   $(LOCAL_PATH)/rootdir/init.t1.usb.rc:root/init.t1.usb.rc \
+   $(LOCAL_PATH)/rootdir/ueventd.t1.rc:root/ueventd.t1.rc \
+   $(LOCAL_PATH)/rootdir/fstab.t1:root/fstab.t1
 
 # Recovery Ramdisk TWRP
-# PRODUCT_COPY_FILES += \
-#     $(LOCAL_PATH)/recovery/root/etc/twrp.fstab:recovery/root/etc/twrp.fstab
+#PRODUCT_PACKAGES += \
+#    twrp.fstab
 
 # Wifi
 PRODUCT_PACKAGES += \
     libwpa_client \
     hostapd \
+    dhcpcd.conf \
     wpa_supplicant \
     wpa_supplicant.conf
 
@@ -74,7 +76,7 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/excluded-input-devices.xml:system/etc/excluded-input-devices.xml
 
-# Base Packages
+# Packages
 PRODUCT_PACKAGES += \
     audio.primary.t1 \
     camera.omap4 \
@@ -87,21 +89,18 @@ PRODUCT_PACKAGES += \
     fibmap.f2fs \
     f2fstat
 
-# libstlport for kk blobs
+# libstlport
 PRODUCT_PACKAGES += \
-    libstlport
+   libstlport
 
 # Camera
 PRODUCT_PACKAGES += \
     Snap
 
-# AdvancedDisplay
-# PRODUCT_PACKAGES += \
-#     AdvancedDisplay
-
 # Hardware tunables
 BOARD_HARDWARE_CLASS += \
-        $(LOCAL_PATH)/cmhw/
+        $(HARDWARE_SAMSUNG_FOLDER)/cmhw \
+	$(OMAP4_NEXT_FOLDER)/cmhw
 
 # These are the hardware-specific features
 PRODUCT_COPY_FILES += \
@@ -129,8 +128,6 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.software.sip.xml:system/etc/permissions/android.software.sip.xml \
     frameworks/native/data/etc/handheld_core_hardware.xml:system/etc/permissions/handheld_core_hardware.xml
 
-#    frameworks/native/data/etc/android.hardware.audio.low_latency.xml:system/etc/permissions/android.hardware.audio.low_latency.xml
-
 # RIL
 PRODUCT_PROPERTY_OVERRIDES += \
     mobiledata.interfaces=pdp0,wlan0,gprs,ppp0 \
@@ -138,17 +135,14 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.ril.gprsclass=10
 
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.opengles.version=131072
+    ro.opengles.version=131072 \
+    ro.hwui.disable_scissor_opt=true
 
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.sf.lcd_density=240
 
-#PRODUCT_PROPERTY_OVERRIDES += \
-#    dalvik.vm.dex2oat-flags=--no-watch-dog
-
-#PRODUCT_TAGS += dalvik.gc.type-precise
+PRODUCT_TAGS += dalvik.gc.type-precise
 
 $(call inherit-product, frameworks/native/build/phone-hdpi-512-dalvik-heap.mk)
 $(call inherit-product-if-exists, hardware/broadcom/wlan/bcmdhd/firmware/bcm4330/device-bcm.mk)
 $(call inherit-product-if-exists, vendor/samsung/i9100g/i9100g-vendor.mk)
-$(call inherit-product-if-exists, vendor/ti/omap4/omap4-vendor.mk)

@@ -1,8 +1,2 @@
 # Filesystem types
-type firmware_ducati, file_type;
-type sensors_data_file, file_type, data_file_type;
-type cbd_device, dev_type;
-type radio_data, file_type;
 type compass_calibration_file, file_type, data_file_type;
-type sysfs_board_type, fs_type, sysfs_type;
-

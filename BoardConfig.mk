@@ -14,14 +14,14 @@
 # limitations under the License.
 #
 
--include device/samsung/i9100g/BoardConfigCommon.mk
+-include device/samsung/omap4-common/BoardConfigCommon.mk
 
 TARGET_SPECIFIC_HEADER_PATH += device/samsung/i9100g/include
 
 TARGET_NO_BOOTLOADER := true
 TARGET_NO_RADIOIMAGE := true
 TARGET_NO_SEPARATE_RECOVERY := true
-# BOARD_CANT_BUILD_RECOVERY_FROM_BOOT_PATCH := true
+BOARD_CANT_BUILD_RECOVERY_FROM_BOOT_PATCH := true
 
 TARGET_BOARD_OMAP_CPU := 4430
 TARGET_BOOTLOADER_BOARD_NAME := t1
@@ -29,14 +29,12 @@ TARGET_BOARD_INFO_FILE := device/samsung/i9100g/board-info.txt
 
 # Inline kernel building
 TARGET_KERNEL_SOURCE := kernel/samsung/t1
-TARGET_KERNEL_CONFIG := lineageos_i9100g_defconfig
+TARGET_KERNEL_CONFIG := lineage_i9100g_defconfig
 BOARD_NAND_PAGE_SIZE := 4096
 BOARD_NAND_SPARE_SIZE := 128
 BOARD_KERNEL_PAGESIZE := 4096
 BOARD_KERNEL_BASE := 0x40000000
-# BOARD_KERNEL_CMDLINE := androidboot.hardware=t1 androidboot.selinux=permissive selinux=0 console=ttySAC2,115200 consoleblank=0 zcache=lz4
-# TARGET_KERNEL_CROSS_COMPILE_PREFIX := arm-linux-androideabi-
-TARGET_NEEDS_PLATFORM_TEXT_RELOCATIONS := true
+BOARD_KERNEL_CMDLINE := androidboot.hardware=t1 androidboot.selinux=permissive selinux=0
 
 # Init
 TARGET_PROVIDES_INIT := true
@@ -44,14 +42,15 @@ TARGET_PROVIDES_INIT_TARGET_RC := true
 
 # Filesystem
 TARGET_USERIMAGES_USE_EXT4 := true
-TARGET_USERIMAGES_USE_F2FS := true
-BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE := ext4
 BOARD_BOOTIMAGE_PARTITION_SIZE := 8388608
-BOARD_CACHEIMAGE_PARTITION_SIZE := 104857600
+BOARD_CACHEIMAGE_PARTITION_SIZE := 734003200
+BOARD_RECOVERYIMAGE_PARTITION_SIZE := 8388608
 BOARD_SYSTEMIMAGE_PARTITION_SIZE := 1073741824
 BOARD_USERDATAIMAGE_PARTITION_SIZE := 2147483648
 BOARD_FLASH_BLOCK_SIZE := 4096
-# LZMA_RAMDISK_TARGETS := recovery
+
+# F2FS filesystem
+TARGET_USERIMAGES_USE_F2FS := true
 
 # Vold
 BOARD_VOLD_MAX_PARTITIONS := 12
@@ -89,13 +88,10 @@ BOARD_USE_TI_DUCATI_H264_PROFILE := true
 BOARD_HAVE_SAMSUNG_BLUETOOTH := true
 
 # Audio
-BOARD_USES_GENERIC_AUDIO := false
-BOARD_USE_TINYALSA_AUDIO := true
-# USE_CUSTOM_AUDIO_POLICY := 1
-# TARGET_TINY_ALSA_IGNORE_SILENCE_SIZE := true
-
-# Graphics
-TARGET_FORCE_SCREENSHOT_CPU_PATH := true
+BOARD_USE_GENERIC_AUDIO := false
+BOARD_USE_ALSA_AUDIO := true
+USE_CUSTOM_AUDIO_POLICY := 0
+#BOARD_HAVE_PRE_KITKAT_AUDIO_BLOB := true
 
 # Charger
 BOARD_CHARGER_SHOW_PERCENTAGE := true
@@ -122,14 +118,8 @@ TARGET_RECOVERY_DEVICE_DIRS += device/samsung/i9100g
 RECOVERY_FSTAB_VERSION := 2
 BOARD_HAS_DOWNLOAD_MODE := true
 BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/samsung/i9100g/recovery/root/recovery_keys.c
-TARGET_RECOVERY_DENSITY := mdpi
-BOARD_RECOVERY_SWIPE := true
-BOARD_PROVIDES_BOOTLOADER_MESSAGE := true
-
-# Custom Bootimage make
-BOARD_CUSTOM_BOOTIMG := true
 BOARD_CUSTOM_BOOTIMG_MK := device/samsung/i9100g/shbootimg.mk
-BOARD_USES_FULL_RECOVERY_IMAGE := true
+TARGET_RECOVERY_DENSITY := mdpi
 
 # assert
 TARGET_OTA_ASSERT_DEVICE := i9100g,GT-I9100G
@@ -141,18 +131,10 @@ TARGET_RELEASETOOLS_EXTENSIONS := device/samsung/i9100g
 # TW_THEME := portrait_mdpi
 # TW_HAS_NO_RECOVERY_PARTITION := true
 # TW_EXCLUDE_ENCRYPTED_BACKUPS := true
-# TARGET_RECOVERY_PIXEL_FORMAT := "BGRA_8888"
 
-# TWRP 3 additional settings
-# RECOVERY_VARIANT := twrp
-# TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery/root/etc/twrp.fstab
-# TW_BRIGHTNESS_PATH := /sys/class/backlight/panel/brightness
-# TW_DEFAULT_BRIGHTNESS := 65
-# TW_MAX_BRIGHTNESS := 255
-# TW_EXCLUDE_SUPERSU := true
-# TW_FLASH_FROM_STORAGE := true
-# TW_EXTERNAL_STORAGE_PATH := "/sdcard"
-# TW_EXTERNAL_STORAGE_MOUNT_POINT := "sdcard"
+# Releasetools
+TARGET_RELEASETOOL_OTA_FROM_TARGET_SCRIPT := ./device/samsung/i9100g/releasetools/t1_ota_from_target_files
+TARGET_RELEASETOOL_IMG_FROM_TARGET_SCRIPT := ./device/samsung/i9100g/releasetools/t1_img_from_target_files
 
 # Use the non-open-source parts, if they're present
 -include vendor/samsung/i9100g/BoardConfigVendor.mk
