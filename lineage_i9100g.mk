@@ -14,6 +14,17 @@
 # limitations under the License.
 #
 
+# Release name
+PRODUCT_RELEASE_NAME := GT-I9100
+
+# Bootanimation
+TARGET_SCREEN_HEIGHT := 800
+TARGET_SCREEN_WIDTH := 480
+TARGET_BOOTANIMATION_HALF_RES := true
+
+# Inherit some common Lineage stuff.
+$(call inherit-product, vendor/lineage/config/common_full_phone.mk)
+
 # Inherit from those products. Most specific first.
 $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 $(call inherit-product, device/samsung/i9100g/i9100g.mk)
